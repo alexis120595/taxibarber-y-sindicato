@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Template</title>
+   
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="static/estilos.css">
+</head>
+
+<body>
+    {% include ("cabecera.html") %}
+    
+   
+    <form class="form" action="acceso-login" method="post">
+        <h1 class="form__title">LOGIN</h1>
+        <p class="form__text">Please login to continue <a href="#" class="form__link">entra aqui</a></p>
+
+        <div class="form__container">
+        <div class="form__group">
+            <label for="exampleInputEmail1" class="form__label"></label>
+            <input type="email" class="form__input" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" name="txtEmail">
+          
+        </div>
+        <div class="form__group">
+            <label for="exampleInputPassword1" class="form__label"></label>
+            <input type="password" class="form__input" id="exampleInputPassword1" placeholder="Password" name="txtPassword">
+        </div>
+
+        <button type="submit" class="form__button">INGRESAR</button>
+      
+        </div>
+
+        
+    </form>
+   
+</body>
+
+
+</html>

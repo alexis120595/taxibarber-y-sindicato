@@ -1,0 +1,41 @@
+<link rel="stylesheet" href="static/register.css">
+
+{% include ("cabecera.html") %}
+
+
+<form class="form" action="/register-user" method="post">
+
+    <h1 class="form__title">REGISTER</h1>
+       
+    <div class="form__container">
+    <div class="form__group">
+        <label class="form__label" for="exampleInputFullName"></label>
+        <input type="text" class="form__input" id="exampleInputFullName" placeholder="Enter full name" name="txtFullName">
+    </div>
+
+    <div class="form__group">
+        <label class="form__label" for="exampleInputEmail"></label>
+        <input type="email" class="form__input" id="exampleInputEmail" placeholder="Enter email" name="txtEmail">
+    </div>
+
+    <div class="form__group">
+        <label class="form__label" for="exampleInputPassword"></label>
+        <input type="password" class="form__input" id="exampleInputPassword" placeholder="Password" name="txtPassword">
+    </div>
+
+    <div class="form__group">
+        <label class="form__label" for="exampleInputConfirmPassword"></label>
+        <input type="password" class="form__input" id="exampleInputConfirmPassword" placeholder="Confirm Password" name="txtConfirmPassword">
+    </div>
+
+    <div class="form__group">
+        <label class="form__label" for="exampleInputBranch"></label>
+        <input type="text" class="form__input" id="exampleInputBranch" placeholder="Enter branch" name="txtBranch">
+    </div>
+    <button type="submit" class="form__button">ENVIAR</button>
+    </div>
+
+    
+</form>
+
+        

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Título de la página</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+          /* Estilos para el interruptor */
+          .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+        }
+        input:checked + .slider {
+            background-color: #2196F3;
+        }
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+        .slider.round {
+            border-radius: 34px;
+        }
+        .slider.round:before {
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+    <div class=""> 
+        <h1>
+           LISTA DE VOUCHERS
+        </h1>
+        {% if boucher %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre 1</th>
+                        <th>Nombre 2</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for voucher in boucher %}
+                        <tr>
+                            <td>{{ voucher.id }}</td>
+                            <td>{{ voucher.name1 }}</td>
+                            <td>{{ voucher.name2 }}</td>
+                            <td>{{ voucher.estado }}</td>
+                            <td>
+                                <label class="switch">
+                                    <input type="checkbox" data-id="{{ voucher.id }}" {% if voucher.estado == 'activo' %}checked{% endif %}>
+                                    <span class="slider round"></span>
+                                </label>   
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No hay vouchers</p>
+        {% endif %}
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+    $('input[type="checkbox"]').change(function(){
+        var id = $(this).data('id');
+        var estado = $(this).is(':checked') ? 'activo' : 'inactivo';
+        $.ajax({
+            url: '/listado-voucher',
+            method: 'POST',
+            data: {
+                id: id,
+                estado: estado
+            },
+            success: function(response) {
+                alert(response.message);
+            }
+        });
+    });
+});
+</script>
+</body>
+</html>
