@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>El voucher se creó correctamente</h1>
+
+<img src="{{ url_for('static', filename='qr/' + filename) }}" alt="QR Code">
+
+<a href="{{ url_for('static', filename='qr/' + filename) }}" download>Descargar QR</a>
+
+</body>
+</html>

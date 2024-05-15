@@ -83,10 +83,10 @@
                             <td>{{ voucher.id }}</td>
                             <td>{{ voucher.name1 }}</td>
                             <td>{{ voucher.name2 }}</td>
-                            <td>{{ voucher.estado }}</td>
+                            <td id="estado-{{ voucher.id }}">{{ voucher.estado }}</td>
                             <td>
                                 <label class="switch">
-                                    <input type="checkbox" data-id="{{ voucher.id }}" {% if voucher.estado == 'activo' %}checked{% endif %}>
+                                    <input type="checkbox" data-id="{{ voucher.id }}" {% if voucher.estado == 'active' %}checked{% endif %}>
                                     <span class="slider round"></span>
                                 </label>   
                             </td>
@@ -102,21 +102,20 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
 $(document).ready(function(){
-    $('input[type="checkbox"]').change(function(){
-        var id = $(this).data('id');
-        var estado = $(this).is(':checked') ? 'activo' : 'inactivo';
-        $.ajax({
-            url: '/listado-voucher',
-            method: 'POST',
-            data: {
-                id: id,
-                estado: estado
-            },
-            success: function(response) {
-                alert(response.message);
-            }
+   
+    $('input[type="checkbox"]').change(function() {
+    var id = $(this).data('id');
+    var estado = $(this).is(':checked') ? 'active' : 'inactive';
+    
+    $.post('/listado-voucher', { id: id, estado: estado })
+        .done(function(response) {
+            $('#estado-' + id).text(estado);
+            alert(response.message);
+        })
+        .fail(function() {
+            alert('Hubo un error al actualizar el estado del voucher');
         });
-    });
+   });
 });
 </script>
 </body>

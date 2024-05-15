@@ -18,7 +18,9 @@ mysql = MySQL(app)
 def home():
     return render_template('index.html')
 
-
+@app.route('/show_qr/<filename>', methods=['GET'])
+def show_qr(filename):
+    return render_template('show_qr.html', filename=filename)
     
 @app.route('/listado-voucher', methods=['GET'])
 def vouchers():
@@ -27,6 +29,8 @@ def vouchers():
     data = cur.fetchall()
     
     return render_template('listado_voucher.html', boucher=data)
+
+
 
 @app.route('/admin', methods=[ 'POST'])
 def boucher():
@@ -50,9 +54,10 @@ def boucher():
         qr.make(fit=True)
 
         img = qr.make_image(fill='black', back_color='white')
-        img.save('static/qr/qr.png')
+        img_filename = f'static/qr/{name1}_{name2}.png'
+        img.save(img_filename)
 
-        return send_file('static/qr/qr.png', mimetype='image/png')
+        return redirect(url_for('show_qr', filename=f'{name1}_{name2}.png'))
 
     return render_template('admin.html')
 
