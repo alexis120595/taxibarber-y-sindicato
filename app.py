@@ -18,9 +18,15 @@ mysql = MySQL(app)
 def home():
     return render_template('index.html')
 
+
+
 @app.route('/show_qr/<filename>', methods=['GET'])
 def show_qr(filename):
     return render_template('show_qr.html', filename=filename)
+
+@app.route('/voucher', methods=['GET'])
+def voucher():
+    return render_template('voucher.html')
     
 @app.route('/listado-voucher', methods=['GET'])
 def vouchers():
@@ -32,7 +38,7 @@ def vouchers():
 
 
 
-@app.route('/admin', methods=[ 'POST'])
+@app.route('/voucher', methods=[ 'POST'])
 def boucher():
     if request.method == 'POST':
         name1 = request.form['txtName1']
@@ -59,7 +65,7 @@ def boucher():
 
         return redirect(url_for('show_qr', filename=f'{name1}_{name2}.png'))
 
-    return render_template('admin.html')
+    return render_template('voucher.html')
 
 @app.route('/listado-voucher', methods=['POST'])
 def update_voucher():
@@ -83,7 +89,7 @@ def login():
         if account:
             session['loggedin'] = True
             session['id'] = account['id']
-            return render_template('admin.html')
+            return render_template('voucher.html')
         else:
             return render_template('index.html', error="Invalid email or password.")
     else:

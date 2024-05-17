@@ -116,3 +116,19 @@ body{
    
 }
 
+
+    .sesion__button{
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        padding: 1em;
+        background-color: #3866f2;
+        color: #fff;
+        border: none;
+        border-radius: .5em;
+        font-weight: 300;
+        font-size: 1rem;
+        font-family: 'Times New Roman', Times, serif;
+        cursor: pointer;
+
+    }

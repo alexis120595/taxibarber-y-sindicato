@@ -1,0 +1,55 @@
+/* CSS */
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+}
+
+.text {
+    margin-bottom: 20px;
+    font-size: 20px;
+}
+
+.qr-code {
+    margin-bottom: 20px;
+}
+
+.download-button {
+    cursor: pointer;
+    padding: 10px 20px;
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    transition-duration: 0.4s;
+}
+
+.download-button:hover {
+    background-color: white; 
+    color: black; 
+    border: 2px solid #4CAF50;
+}
+
+.back-button {
+position: absolute;
+top: 0;
+left: 0;
+padding: 10px 20px;
+background-color: #4CAF50; /* Green */
+border: none;
+color: white;
+text-align: center;
+text-decoration: none;
+display: inline-block;
+font-size: 16px;
+margin: 4px 2px;
+transition-duration: 0.4s;
+
+}

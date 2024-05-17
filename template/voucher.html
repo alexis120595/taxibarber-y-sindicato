@@ -8,9 +8,9 @@
 </head>
 <body>
     <h1>
-        perfil users
+    
     </h1>
-    <form class="form" action="/admin" method="post">
+    <form class="form" action="/voucher" method="post">
 
         <h1 class="form__title">BOUCHER</h1>
            
@@ -30,9 +30,14 @@
     
         
         <button type="submit" class="form__button">GENERAR BOUCHER</button>
+
+        
         </div>
     
-        
+
     </form>
+    <a href="{{ url_for('login') }}">
+        <button type="button" class="sesion__button">CERRAR SESIÓN</button>
+    </a>
 </body>
 </html>
