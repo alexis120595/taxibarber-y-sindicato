@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search Results</title>
+    <link rel="stylesheet" href="static/search_results.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Search Results</h1>
+        {% if users %}
+            {% for user in users %}
+                <div class="card">
+                    <h2>{{ user.name }} {{ user.surname }}</h2>
+                    <p>{{ user.job_title }}</p>
+                    <p>{{ user.company }}</p>
+                    <p>{{ user.email }}</p>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No users found.</p>
+        {% endif %}
+    </div>
+</body>
+</html>

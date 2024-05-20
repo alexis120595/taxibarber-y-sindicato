@@ -6,25 +6,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" type="text/css" href="/static/loginadmin.css">
+   
 </head>
 
 <body>
-   <div>
+   <div class="form">
     <form class="form-control" action="acceso-admin" method="post">
-        <div class="form-group">
-            <label for="exampleInputUserName1">User Name</label>
-            <input type="text" class="form-control" id="exampleInputUserName1" aria-describedby="userNameHelp" placeholder="Enter user name" name="txtUserName">
-            <small id="userNameHelp" class="form-text text-muted">We'll never share your user name with anyone else.</small>
+        <h2 class="form__title"> ADMIN</h2>
+        <div class="form__group">
+            <label for="exampleInputUserName1" class="form__label"></label>
+            <input type="text" class="form-control form__input" id="exampleInputUserName1" aria-describedby="userNameHelp" placeholder="Enter user name" name="txtUserName">
+            <small id="userNameHelp" class="form-text text-muted form__paragraph">.</small>
         </div>
-        <div class="form-group">
-            <label for="exampleInputPassword1">Password</label>
-            <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" name="txtPassword">
+        <div class="form__group">
+            <label for="exampleInputPassword1" class="form__label"></label>
+            <input type="password" class="form-control form__input" id="exampleInputPassword1" placeholder="Password" name="txtPassword">
         </div>
         <div class="form-check">
-            <input type="checkbox" class="form-check-input" id="exampleCheck1">
-            <label class="form-check-label" for="exampleCheck1">Check me out</label>
+       
         </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary form__button">INGRESAR</button>
     </form>
    </div>
 </body>

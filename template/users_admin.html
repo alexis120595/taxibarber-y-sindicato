@@ -9,6 +9,11 @@
     <h1>
        LISTA DE USUARIOS
     </h1>
+
+    <form action="/search" method="post">
+        <input type="text" name="username" placeholder="Buscar usuario por nombre">
+        <input type="submit" value="Buscar">
+    </form>
     {% if users %}
         <table>
             <thead>

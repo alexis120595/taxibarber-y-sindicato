@@ -1,6 +1,6 @@
 /* Estilos para la lista de usuarios */
 .user-list {
-    margin-left: 220px; /* Desplaza la lista de usuarios a la derecha para hacer espacio para la barra lateral */
+    margin-left: 20px; /* Desplaza la lista de usuarios a la derecha para hacer espacio para la barra lateral */
     padding: 20px;
 }
 

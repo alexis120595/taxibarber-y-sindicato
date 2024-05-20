@@ -18,6 +18,17 @@ mysql = MySQL(app)
 def home():
     return render_template('index.html')
 
+@app.route('/search', methods=['GET', 'POST'])
+def search():
+    data = []
+    if request.method == 'POST':
+        search = request.form['username']
+        cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cur.execute('SELECT * FROM users WHERE name = %s', [search])
+        data = cur.fetchall()
+        cur.close()
+
+    return render_template('search_results.html', users=data)
 
 
 @app.route('/show_qr/<filename>', methods=['GET'])
