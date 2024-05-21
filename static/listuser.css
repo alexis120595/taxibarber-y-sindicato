@@ -1,4 +1,24 @@
 /* Estilos para la lista de usuarios */
+
+.form-container {
+    display: flex;
+    justify-content: flex-end;
+}
+
+form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 50px;
+}
+       
+
+form input[type="text"] {
+    padding: 5px;
+}
+
+form input[type="submit"] {
+    padding: 5px;
+}
 .user-list {
     margin-left: 20px; /* Desplaza la lista de usuarios a la derecha para hacer espacio para la barra lateral */
     padding: 20px;
@@ -40,3 +60,4 @@
     background-color: #f44336;
     color: white;
 }
+

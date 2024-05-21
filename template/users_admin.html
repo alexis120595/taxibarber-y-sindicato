@@ -9,11 +9,13 @@
     <h1>
        LISTA DE USUARIOS
     </h1>
-
-    <form action="/search" method="post">
-        <input type="text" name="username" placeholder="Buscar usuario por nombre">
-        <input type="submit" value="Buscar">
+    <a href="/listado-voucher" class="btn">VER LISTADO DE VOUCHERS </a>
+<div class="form-container">
+    <form class="form" action="/search" method="post">
+        <input class="form input" type="text" name="username" placeholder="Buscar usuario por nombre">
+        <input class="form input" type="submit" value="Buscar">
     </form>
+</div>
     {% if users %}
         <table>
             <thead>
