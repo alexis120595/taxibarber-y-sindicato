@@ -71,6 +71,7 @@ form input[type="submit"] {
     border-radius: 5px;
     text-decoration: none;
     transition: background-color 0.3s ease;
+   
 }
 
 .btn:hover {

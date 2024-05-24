@@ -5,8 +5,11 @@
     <link rel="stylesheet" href="static/search_results.css">
 </head>
 <body>
+    <button class="btn" onclick="location.href='/users-admin'">Volver a la base de datos</button>
     <div class="container">
-        <h1>Search Results</h1>
+        
+        <h1>DETALLE DEL USUARIO</h1>
+        
         {% if users %}
             {% for user in users %}
                 <div class="card">
@@ -20,5 +23,6 @@
             <p>No users found.</p>
         {% endif %}
     </div>
+   
 </body>
 </html>

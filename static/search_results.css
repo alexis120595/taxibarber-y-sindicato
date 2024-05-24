@@ -11,14 +11,26 @@
     padding: 20px;
     margin-bottom: 20px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
-    width: 80%;
+    width: 30%;
     text-align: center;
+    aspect-ratio: 1/1; /* Add this line to make the card square */
 }
 
-.card h2 {
-    margin-bottom: 10px;
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    color: #fff;
+    background-color: #007BFF;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    margin-left: 20px;
+    margin-top: 30px;
+    
 }
 
-.card p {
-    margin-bottom: 5px;
+.btn:hover {
+    background-color: #0056b3;
 }

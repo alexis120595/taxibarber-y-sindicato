@@ -18,6 +18,8 @@ mysql = MySQL(app)
 def home():
     return render_template('index.html')
 
+
+
 @app.route('/search', methods=['GET', 'POST'])
 def search():
     data = []
@@ -31,9 +33,39 @@ def search():
     return render_template('search_results.html', users=data)
 
 
+
+
 @app.route('/show_qr/<filename>', methods=['GET'])
 def show_qr(filename):
-    return render_template('show_qr.html', filename=filename)
+    name1, name2 = filename.split('.')[0].split('_')
+
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+
+    # Obtener el estado del voucher
+    cur.execute('SELECT estado FROM boucher WHERE name1 = %s AND name2 = %s', (name1, name2))
+    result = cur.fetchone()
+    estado = result['estado']
+
+    # Generar el código QR
+    if estado == 'active':
+        data = f"{name1} {name2}"  # Datos para el código QR
+    else:
+        data = 'qr inactivo, genere uno nuevo'
+
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=10,
+        border=4,
+    )
+    qr.add_data(data)
+    qr.make(fit=True)
+
+    img = qr.make_image(fill='black', back_color='white')
+    img_filename = f'static/qr/{name1}_{name2}.png'
+    img.save(img_filename)
+
+    return render_template('show_qr.html', filename=f'{name1}_{name2}.png')
 
 @app.route('/voucher', methods=['GET'])
 def voucher():
@@ -59,8 +91,16 @@ def boucher():
         cur.execute('INSERT INTO boucher (name1, name2) VALUES (%s, %s)', (name1, name2))
         mysql.connection.commit()
 
+         # Obtener el estado del voucher
+        cur.execute('SELECT estado FROM boucher WHERE name1 = %s AND name2 = %s', (name1, name2))
+        result = cur.fetchone()
+        estado = result['estado']
+
         # Generar el código QR
-        data = f"{name1} {name2}"  # Datos para el código QR
+        if estado == 'active':   
+         data = f"{name1} {name2}"  # Datos para el código QR
+        else:
+            data = 'qr inactivo, genere uno nuevo'
         qr = qrcode.QRCode(
             version=1,
             error_correction=qrcode.constants.ERROR_CORRECT_L,
