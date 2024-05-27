@@ -1,7 +1,10 @@
 from flask import Flask
-from flask import render_template, redirect, request, Response, session, url_for, send_file
+from flask import render_template, redirect, request, Response, session, url_for, send_file, jsonify
 from flask_mysqldb import MySQL, MySQLdb
 import qrcode
+import plotly.graph_objects as go
+import plotly.io as pio
+from datetime import datetime
 
 
 app = Flask(__name__, template_folder='template')
@@ -17,6 +20,33 @@ mysql = MySQL(app)
 @app.route('/')
 def home():
     return render_template('index.html')
+
+@app.route('/graficos')
+def graph():
+    return render_template('graficos.html')
+
+@app.route('/data_for_graph')
+def data_for_graph():
+    # Crea un cursor
+    cur = mysql.connection.cursor()
+
+    # Ejecuta una consulta SQL para obtener los datos que necesitas para el gráfico
+    cur.execute("SELECT DATE(fecha) as fecha, COUNT(*) as count FROM boucher GROUP BY DATE(fecha)")
+    # Obtiene los resultados de la consulta
+    rows = cur.fetchall()
+
+    # Separa los resultados en dos listas
+    x_data = [row['fecha'] for row in rows]
+    y_data = [row['count'] for row in rows]
+
+    # Crea el gráfico
+    fig = go.Figure(data=go.Bar(x=x_data, y=y_data))
+
+    # Convierte el gráfico a JSON
+    graph_json = pio.to_json(fig)
+
+    # Envía el gráfico como JSON
+    return jsonify(graph_json=graph_json)
 
 
 
@@ -88,7 +118,8 @@ def boucher():
         name2 = request.form['txtName2']
 
         cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cur.execute('INSERT INTO boucher (name1, name2) VALUES (%s, %s)', (name1, name2))
+        fecha = datetime.now()
+        cur.execute('INSERT INTO boucher (name1, name2, fecha) VALUES (%s, %s, %s)', (name1, name2, fecha))
         mysql.connection.commit()
 
          # Obtener el estado del voucher
