@@ -29,10 +29,9 @@ def graph():
 def data_for_graph():
     # Crea un cursor
     cur = mysql.connection.cursor()
-
-    # Ejecuta una consulta SQL para obtener los datos que necesitas para el gráfico
-    cur.execute("SELECT DATE(fecha) as fecha, COUNT(*) as count FROM boucher GROUP BY DATE(fecha)")
-    # Obtiene los resultados de la consulta
+    
+    cur.execute("SELECT DATE_FORMAT(fecha, '%Y-%m') as fecha, COUNT(*) as count FROM boucher GROUP BY DATE_FORMAT(fecha, '%Y-%m')")
+    
     rows = cur.fetchall()
 
     # Separa los resultados en dos listas
