@@ -119,8 +119,8 @@ body{
 
     .sesion__button{
         position: absolute;
-        top: 10px;
-        right: 10px;
+        top: 30px;
+        left: 30px;
         padding: 1em;
         background-color: #3866f2;
         color: #fff;

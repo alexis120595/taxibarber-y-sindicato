@@ -10,7 +10,7 @@
 
 .text {
     margin-bottom: 20px;
-    font-size: 20px;
+    font-size: 40px;
 }
 
 .qr-code {
@@ -20,13 +20,14 @@
 .download-button {
     cursor: pointer;
     padding: 10px 20px;
-    background-color: #4CAF50; /* Green */
+    background-color: #3866f2;
     border: none;
+    border-radius: .5em;
     color: white;
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 16px;
+    font-size: 20px;
     margin: 4px 2px;
     transition-duration: 0.4s;
 }
@@ -34,21 +35,22 @@
 .download-button:hover {
     background-color: white; 
     color: black; 
-    border: 2px solid #4CAF50;
+    border: 2px solid #3866f2;
 }
 
 .back-button {
 position: absolute;
-top: 0;
-left: 0;
+top: 30px;
+left: 30px;
 padding: 10px 20px;
-background-color: #4CAF50; /* Green */
+background-color: #3866f2;
 border: none;
+border-radius: .5em;
 color: white;
 text-align: center;
 text-decoration: none;
 display: inline-block;
-font-size: 16px;
+font-size: 20px;
 margin: 4px 2px;
 transition-duration: 0.4s;
 

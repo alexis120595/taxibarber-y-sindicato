@@ -31,6 +31,14 @@ body{
     margin-bottom: .5em;
 }
 
+.form__text{
+    font-size: 20px;
+}
+.link{
+    color: #3866f2;
+    text-decoration: none;
+}
+
 .form__paragraph{
     font-weight: 400;
 }
