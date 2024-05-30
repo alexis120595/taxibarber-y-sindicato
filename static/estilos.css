@@ -64,11 +64,17 @@ body{
     background: none;
     color: #706c6c;
     border: none;
-    border-bottom: 1px solid var(--color);
+    border: 1px solid var(--color);
     padding: .6em .3em;
     font-size: 1rem;
     outline: none;
     font-family: 'Times New Roman', Times, serif;
+    border-radius: 15px;
+
+}
+
+.form__input::placeholder {
+    text-align: center;
 }
 
 
@@ -99,6 +105,10 @@ body{
     font-size: 1rem;
     font-family: 'Times New Roman', Times, serif;
     margin-top: 10px;
+    width: fit-content;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .form__line{

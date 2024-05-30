@@ -4,30 +4,13 @@
     <title>Gráfico</title>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <style>
-        body {
-            background-color: #f0f0f0;
-            font-family: Arial, sans-serif;
-        }
-        #myDiv {
-            width: 80%;
-            height: 500px;
-            margin: 0 auto;
-            border: 1px solid #ccc;
-            padding: 10px;
-            background-color: #fff;
-        }
-    </style>
+   <link rel="stylesheet" href="static/graficos.css">
+  
 </head>
 <body>
-    <a href="/listado-voucher" class="btn">GRÁFICOS</a>
-    <select id="filtro">
-        <option value="dia">Día</option>
-        <option value="semana">Semana</option>
-        <option value="mes">Mes</option>
-    </select>
+    
     <div id="myDiv"><!-- El gráfico de Plotly se dibujará dentro de este DIV --></div>
-
+    <a href="/listado-voucher" class="btn">Volver<a>
     <script>
     $(document).ready(function() {
         $.getJSON('/data_for_graph', function(data) {

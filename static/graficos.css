@@ -1,0 +1,31 @@
+.btn {
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    padding: 10px 20px;
+    background-color: #3866f2;
+    border: none;
+    border-radius: .5em;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 20px;
+    margin: 4px 120px;
+    transition-duration: 0.4s;
+    
+    }
+
+    
+    body {
+        background-color: #f0f0f0;
+        font-family: Arial, sans-serif;
+    }
+    #myDiv {
+        width: 80%;
+        height: 500px;
+        margin: 0 auto;
+        border: 1px solid #ccc;
+        padding: 10px;
+        background-color: #fff;
+    }

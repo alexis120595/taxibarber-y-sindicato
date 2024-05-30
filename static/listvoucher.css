@@ -8,8 +8,16 @@ th, td {
     padding: 8px;
 }
 th {
-    background-color: #4CAF50;
+    background-color:  #007BFF;
     color: white;
+}
+td {
+    text-align: center;
+}
+
+.title{
+    text-align: center;
+    margin-bottom: 20px;
 }
 
 /* Estilos para el interruptor */

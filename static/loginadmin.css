@@ -28,7 +28,7 @@ body{
 
 .form__title{
     font-size:2rem;
-    margin-bottom: .5em;
+    margin-bottom: 40px;
 }
 
 .form__paragraph{
@@ -56,11 +56,17 @@ body{
     background: none;
     color: #706c6c;
     border: none;
-    border-bottom: 1px solid var(--color);
+    border: 1px solid var(--color);
     padding: .6em .3em;
     font-size: 1rem;
     outline: none;
     font-family: 'Times New Roman', Times, serif;
+    border-radius: 15px;
+
+}
+
+.form__input::placeholder {
+    text-align: center;
 }
 
 
@@ -90,7 +96,7 @@ body{
     font-weight: 300;
     font-size: 1rem;
     font-family: 'Times New Roman', Times, serif;
-    margin-top: 10px;
+    margin-top: 40px;
 }
 
 .form__line{
