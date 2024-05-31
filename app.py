@@ -17,99 +17,62 @@ app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 
 mysql = MySQL(app)
 
+#esta es la ruta de la pagina principal
 @app.route('/')
 def home():
     return render_template('index.html')
 
-@app.route('/graficos')
-def graph():
-    return render_template('graficos.html')
+#esta ruta renderiza el formulario de registro de los usuarios
+@app.route('/register')
+def register():
+    return render_template('register.html')
 
-@app.route('/data_for_graph')
-def data_for_graph():
-    # Crea un cursor
-    cur = mysql.connection.cursor()
-    
-    cur.execute("SELECT DATE_FORMAT(fecha, '%Y-%m') as fecha, COUNT(*) as count FROM boucher GROUP BY DATE_FORMAT(fecha, '%Y-%m')")
-    
-    rows = cur.fetchall()
-
-    # Separa los resultados en dos listas
-    x_data = [row['fecha'] for row in rows]
-    y_data = [row['count'] for row in rows]
-
-    # Crea el gráfico
-    fig = go.Figure(data=go.Bar(x=x_data, y=y_data))
-
-    # Convierte el gráfico a JSON
-    graph_json = pio.to_json(fig)
-
-    # Envía el gráfico como JSON
-    return jsonify(graph_json=graph_json)
-
-
-
-@app.route('/search', methods=['GET', 'POST'])
-def search():
-    data = []
-    if request.method == 'POST':
-        search = request.form['username']
-        cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cur.execute('SELECT * FROM users WHERE name = %s', [search])
-        data = cur.fetchall()
-        cur.close()
-
-    return render_template('search_results.html', users=data)
-
-
-
-
-@app.route('/show_qr/<filename>', methods=['GET'])
-def show_qr(filename):
-    name1, name2 = filename.split('.')[0].split('_')
-
-    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-
-    # Obtener el estado del voucher
-    cur.execute('SELECT estado FROM boucher WHERE name1 = %s AND name2 = %s', (name1, name2))
-    result = cur.fetchone()
-    estado = result['estado']
-
-    # Generar el código QR
-    if estado == 'active':
-        data = f"{name1} {name2}"  # Datos para el código QR
-    else:
-        data = 'qr inactivo, genere uno nuevo'
-
-    qr = qrcode.QRCode(
-        version=1,
-        error_correction=qrcode.constants.ERROR_CORRECT_L,
-        box_size=10,
-        border=4,
-    )
-    qr.add_data(data)
-    qr.make(fit=True)
-
-    img = qr.make_image(fill='black', back_color='white')
-    img_filename = f'static/qr/{name1}_{name2}.png'
-    img.save(img_filename)
-
-    return render_template('show_qr.html', filename=f'{name1}_{name2}.png')
-
+#esta ruta renderiza el formulario del voucher 
 @app.route('/voucher', methods=['GET'])
 def voucher():
     return render_template('voucher.html')
+
+#esta es la ruta del inicio de sesion de los usuarios
+@app.route('/acceso-login', methods=['POST', 'GET'])
+def login():
+    if request.method == 'POST':
+        email = request.form['txtEmail']
+        password = request.form['txtPassword']
+        cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cur.execute('SELECT * FROM users WHERE email = %s AND password = %s', (email, password,))
+        account = cur.fetchone()
+        
+        if account:
+            session['loggedin'] = True
+            session['id'] = account['id']
+            return render_template('voucher.html')
+        else:
+            return render_template('index.html', error="Invalid email or password.")
+    else:
+        # Si el método es GET, simplemente renderizamos el formulario de inicio de sesión.
+        return render_template('index.html')
     
-@app.route('/listado-voucher', methods=['GET'])
-def vouchers():
-    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    cur.execute('SELECT * FROM boucher')
-    data = cur.fetchall()
+#esta ruta crea al usuario unavez completada la informacion que se pide en el formulario 
+@app.route('/register-user', methods=['POST'])
+def register_user():
+    if request.method == 'POST':
+        name = request.form['txtFullName']
+        email = request.form['txtEmail']
+        password = request.form['txtPassword']
+        confirm_password = request.form['txtConfirmPassword']
+        branch = request.form['txtBranch']
+
+        if password != confirm_password:
+            # Las contraseñas no coinciden
+            return "Error: Passwords do not match"
+
+        cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cur.execute('INSERT INTO users (name, email, password, branch) VALUES (%s, %s, %s, %s)', (name, email, password, branch))
+        mysql.connection.commit()
+        return render_template('index.html')
     
-    return render_template('listado_voucher.html', boucher=data)
-
-
-
+#esta ruta crea el voucher una vez completada la informacion que se pide en el formulario 
+#tambien genera el qr para que pueda ser escaneado y descargado por el usuario
 @app.route('/voucher', methods=[ 'POST'])
 def boucher():
     if request.method == 'POST':
@@ -148,66 +111,44 @@ def boucher():
 
     return render_template('voucher.html')
 
-@app.route('/listado-voucher', methods=['POST'])
-def update_voucher():
-    id = request.form.get('id')
-    estado = request.form.get('estado')
+#esta ruta muestra el qr generado una vez es enviado el voucher
+# y la informacion es guardada en la base de datos de forma correta 
+@app.route('/show_qr/<filename>', methods=['GET'])
+def show_qr(filename):
+    name1, name2 = filename.split('.')[0].split('_')
+
     cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    cur.execute('UPDATE boucher SET estado = %s WHERE id = %s', (estado, id))
-    mysql.connection.commit()
-    return {'message': 'Voucher actualizado correctamente'}
 
+    # Obtener el estado del voucher
+    cur.execute('SELECT estado FROM boucher WHERE name1 = %s AND name2 = %s', (name1, name2))
+    result = cur.fetchone()
+    estado = result['estado']
 
-@app.route('/acceso-login', methods=['POST', 'GET'])
-def login():
-    if request.method == 'POST':
-        email = request.form['txtEmail']
-        password = request.form['txtPassword']
-        cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cur.execute('SELECT * FROM users WHERE email = %s AND password = %s', (email, password,))
-        account = cur.fetchone()
-        
-        if account:
-            session['loggedin'] = True
-            session['id'] = account['id']
-            return render_template('voucher.html')
-        else:
-            return render_template('index.html', error="Invalid email or password.")
+    # Generar el código QR
+    if estado == 'active':
+        data = f"{name1} {name2}"  # Datos para el código QR
     else:
-        # Si el método es GET, simplemente renderizamos el formulario de inicio de sesión.
-        return render_template('index.html')
-    
-@app.route('/users-admin', methods=['GET'])
-def users_admin():
-    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    cur.execute('SELECT * FROM users')
-    data = cur.fetchall()
-    
-    return render_template('users_admin.html', users=data)
+        data = 'qr inactivo, genere uno nuevo'
 
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=10,
+        border=4,
+    )
+    qr.add_data(data)
+    qr.make(fit=True)
 
-@app.route('/users-admin/delete/<int:id>', methods=['POST'])
-def delete_user(id):
-    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    cur.execute('DELETE FROM users WHERE id = %s', (id,))
-    mysql.connection.commit()
-    return redirect(url_for('users_admin'))
+    img = qr.make_image(fill='black', back_color='white')
+    img_filename = f'static/qr/{name1}_{name2}.png'
+    img.save(img_filename)
 
+    return render_template('show_qr.html', filename=f'{name1}_{name2}.png')
 
+    # aca finalizan todas la rutas del lado del usuario 
+    # ahora comienzan la rutas de los administradores 
 
-@app.route('/users-admin/<int:id>', methods=['PUT'])
-def update_user(id):
-    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    
-    # Assuming you're receiving JSON data in the form { "name": "new name", "branch": "new branch" }
-    data = request.get_json()
-    new_name = data['name']
-    new_branch = data['branch']
-
-    cur.execute('UPDATE users SET name = %s, branch = %s WHERE id = %s', (new_name, new_branch, id))
-    mysql.connection.commit()
-    return "User updated"
-    
+# esta ruta renderiza la plantilla del inicio de sesion de los administradores 
 @app.route('/acceso-admin', methods=['GET', 'POST'])
 def administrador():
     if request.method == 'POST':
@@ -226,38 +167,100 @@ def administrador():
     else:
         return render_template('index_admin.html')
     
-
-@app.route('/register')
-def register():
-    return render_template('register.html')
-
-
-@app.route('/register-user', methods=['POST'])
-def register_user():
-    if request.method == 'POST':
-        name = request.form['txtFullName']
-        email = request.form['txtEmail']
-        password = request.form['txtPassword']
-        confirm_password = request.form['txtConfirmPassword']
-        branch = request.form['txtBranch']
-
-        if password != confirm_password:
-            # Las contraseñas no coinciden
-            return "Error: Passwords do not match"
-
-        cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cur.execute('INSERT INTO users (name, email, password, branch) VALUES (%s, %s, %s, %s)', (name, email, password, branch))
-        mysql.connection.commit()
-        return render_template('index.html')
+# esta ruta muestra todos los usuarios que se han registrado en la base de datos
+@app.route('/users-admin', methods=['GET'])
+def users_admin():
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cur.execute('SELECT * FROM users')
+    data = cur.fetchall()
     
+    return render_template('users_admin.html', users=data)
+
+# esta ruta nos perite eliminar usuarios de la base de datos
+@app.route('/users-admin/delete/<int:id>', methods=['POST'])
+def delete_user(id):
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cur.execute('DELETE FROM users WHERE id = %s', (id,))
+    mysql.connection.commit()
+    return redirect(url_for('users_admin'))
 
 
+# esta ruta nos permite editar los usuarios de la base de datos
+@app.route('/users-admin/<int:id>', methods=['PUT'])
+def update_user(id):
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    
+    # Assuming you're receiving JSON data in the form { "name": "new name", "branch": "new branch" }
+    data = request.get_json()
+    new_name = data['name']
+    new_branch = data['branch']
 
+    cur.execute('UPDATE users SET name = %s, branch = %s WHERE id = %s', (new_name, new_branch, id))
+    mysql.connection.commit()
+    return "User updated"
 
+#esta ruta nos permite buscar por nombre a los usuarios de la base de datos
+@app.route('/search', methods=['GET', 'POST'])
+def search():
+    data = []
+    if request.method == 'POST':
+        search = request.form['username']
+        cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cur.execute('SELECT * FROM users WHERE name = %s', [search])
+        data = cur.fetchall()
+        cur.close()
 
+    return render_template('search_results.html', users=data)
 
+#esta ruta nos permite ver el listado de los voucher que se han generado
+@app.route('/listado-voucher', methods=['GET'])
+def vouchers():
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cur.execute('SELECT * FROM boucher')
+    data = cur.fetchall()
+    
+    return render_template('listado_voucher.html', boucher=data)
 
-   
+#esta ruta nos permite actualizar el estado de los voucher
+@app.route('/listado-voucher', methods=['POST'])
+def update_voucher():
+    id = request.form.get('id')
+    estado = request.form.get('estado')
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cur.execute('UPDATE boucher SET estado = %s WHERE id = %s', (estado, id))
+    mysql.connection.commit()
+    return {'message': 'Voucher actualizado correctamente'}
+
+# esta ruta nos renderiza la plantilla de los graficos
+@app.route('/graficos')
+def graph():
+    return render_template('graficos.html')
+
+# esta ruta nos permite obtener los datos para el grafico
+#en este caso se obtiene la cantidad de voucher generados por mes
+@app.route('/data_for_graph')
+def data_for_graph():
+    # Crea un cursor
+    cur = mysql.connection.cursor()
+    
+    cur.execute("SELECT DATE_FORMAT(fecha, '%Y-%m') as fecha, COUNT(*) as count FROM boucher GROUP BY DATE_FORMAT(fecha, '%Y-%m')")
+    
+    rows = cur.fetchall()
+
+    # Separa los resultados en dos listas
+    x_data = [row['fecha'] for row in rows]
+    y_data = [row['count'] for row in rows]
+
+    # Crea el gráfico
+    fig = go.Figure(data=go.Bar(x=x_data, y=y_data))
+
+    # Convierte el gráfico a JSON
+    graph_json = pio.to_json(fig)
+
+    # Envía el gráfico como JSON
+    return jsonify(graph_json=graph_json)
+
+  
 if __name__ == '__main__':
     app.secret_key = "alexis"
     app.run(debug=True, port=5000, host='0.0.0.0', threaded=True)
