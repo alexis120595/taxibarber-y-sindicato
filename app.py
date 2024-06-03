@@ -5,6 +5,8 @@ import qrcode
 import plotly.graph_objects as go
 import plotly.io as pio
 from datetime import datetime
+import re
+import unicodedata
 
 
 app = Flask(__name__, template_folder='template')
@@ -38,16 +40,26 @@ def login():
     if request.method == 'POST':
         email = request.form['txtEmail']
         password = request.form['txtPassword']
-        cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cur.execute('SELECT * FROM users WHERE email = %s AND password = %s', (email, password,))
-        account = cur.fetchone()
+
+        try:
+            cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cur.execute('SELECT * FROM users WHERE email = %s', (email,))
+            user = cur.fetchone()
+
+            if user is None:
+                return render_template('index.html', error="User not registered.")
+            
+            cur.execute('SELECT * FROM users WHERE email = %s AND password = %s', (email, password,))
+            account = cur.fetchone()
+        except Exception as e:
+            return render_template('index.html', error="Database error: " + str(e))
         
         if account:
             session['loggedin'] = True
             session['id'] = account['id']
             return render_template('voucher.html')
         else:
-            return render_template('index.html', error="Invalid email or password.")
+            return render_template('index.html', error="Invalid password.")
     else:
         # Si el método es GET, simplemente renderizamos el formulario de inicio de sesión.
         return render_template('index.html')
@@ -55,21 +67,35 @@ def login():
 #esta ruta crea al usuario unavez completada la informacion que se pide en el formulario 
 @app.route('/register-user', methods=['POST'])
 def register_user():
-    if request.method == 'POST':
-        name = request.form['txtFullName']
-        email = request.form['txtEmail']
-        password = request.form['txtPassword']
-        confirm_password = request.form['txtConfirmPassword']
-        branch = request.form['txtBranch']
+    try:
+        error = None
+        if request.method == 'POST':
+            name = request.form['txtFullName']
+            email = request.form['txtEmail']
+            password = request.form['txtPassword']
+            confirm_password = request.form['txtConfirmPassword']
+            branch = request.form['txtBranch']
 
-        if password != confirm_password:
-            # Las contraseñas no coinciden
-            return "Error: Passwords do not match"
+            normalized_name = unicodedata.normalize('NFKD', name).encode('ASCII', 'ignore').decode('utf-8')
 
-        cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cur.execute('INSERT INTO users (name, email, password, branch) VALUES (%s, %s, %s, %s)', (name, email, password, branch))
-        mysql.connection.commit()
-        return render_template('index.html')
+            if not name:
+                 error = "Error: Name is required"
+            elif not re.match("^[A-Za-z ]*$", normalized_name):
+                error = "Error: Name can only contain letters"
+            elif not branch:
+                    error = "Error: Branch is required"
+            elif password != confirm_password:
+             error = "Error: Passwords do not match"
+            if error is None:
+                cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+                cur.execute('INSERT INTO users (name, email, password, branch) VALUES (%s, %s, %s, %s)', (name, email, password, branch))
+                mysql.connection.commit()
+                return render_template('index.html')
+        return render_template('register.html', error=error)
+    except Exception as e:
+        # Aquí puedes manejar el error como quieras. Por ejemplo, puedes imprimir el error y devolver un mensaje de error al usuario.
+        print(e)
+        return "An error occurred while processing your request. Please try again later.", 500
     
 #esta ruta crea el voucher una vez completada la informacion que se pide en el formulario 
 #tambien genera el qr para que pueda ser escaneado y descargado por el usuario

@@ -5,32 +5,38 @@
 
 <form class="form" action="/register-user" method="post">
 
+    {% if error %}
+<div class="alert alert-danger" role="alert">
+  {{ error }}
+</div>
+{% endif %}
+
     <h1 class="form__title">REGISTER</h1>
        
     <div class="form__container">
     <div class="form__group">
         <label class="form__label" for="exampleInputFullName"></label>
-        <input type="text" class="form__input" id="exampleInputFullName" placeholder="Enter full name" name="txtFullName">
+        <input type="text" class="form__input" id="exampleInputFullName" placeholder="Enter full name" name="txtFullName" required>
     </div>
 
     <div class="form__group">
         <label class="form__label" for="exampleInputEmail"></label>
-        <input type="email" class="form__input" id="exampleInputEmail" placeholder="Enter email" name="txtEmail">
+        <input type="email" class="form__input" id="exampleInputEmail" placeholder="Enter email" name="txtEmail" required>
     </div>
 
     <div class="form__group">
         <label class="form__label" for="exampleInputPassword"></label>
-        <input type="password" class="form__input" id="exampleInputPassword" placeholder="Password" name="txtPassword">
+        <input type="password" class="form__input" id="exampleInputPassword" placeholder="Password" name="txtPassword" required>
     </div>
 
     <div class="form__group">
         <label class="form__label" for="exampleInputConfirmPassword"></label>
-        <input type="password" class="form__input" id="exampleInputConfirmPassword" placeholder="Confirm Password" name="txtConfirmPassword">
+        <input type="password" class="form__input" id="exampleInputConfirmPassword" placeholder="Confirm Password" name="txtConfirmPassword" required>
     </div>
 
     <div class="form__group">
         <label class="form__label" for="exampleInputBranch"></label>
-        <input type="text" class="form__input" id="exampleInputBranch" placeholder="Enter branch" name="txtBranch">
+        <input type="text" class="form__input" id="exampleInputBranch" placeholder="Enter branch" name="txtBranch" required>
     </div>
     <button type="submit" class="form__button">ENVIAR</button>
     </div>

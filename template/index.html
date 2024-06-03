@@ -18,16 +18,19 @@
             <a href="/acceso-admin">LOGIN</a>
         </h1>
         <p class="form__text">Si no tienes una cuenta,  <a class="link" href="register" class="form__link">entra aqui</a></p>
-
+       
+        {% if error %}
+        <p class="form__error">{{ error }}</p>
+        {% endif %}
         <div class="form__container">
         <div class="form__group">
             <label for="exampleInputEmail1" class="form__label"></label>
-            <input type="email" class="form__input" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" name="txtEmail">
+            <input type="email" class="form__input" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" name="txtEmail" required>
           
         </div>
         <div class="form__group">
             <label for="exampleInputPassword1" class="form__label"></label>
-            <input type="password" class="form__input" id="exampleInputPassword1" placeholder="Password" name="txtPassword">
+            <input type="password" class="form__input" id="exampleInputPassword1" placeholder="Password" name="txtPassword" required>
         </div>
 
         <button type="submit" class="form__button">INGRESAR</button>
