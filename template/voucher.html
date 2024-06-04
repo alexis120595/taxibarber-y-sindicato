@@ -13,28 +13,24 @@
     <form class="form" action="/voucher" method="post">
 
         <h1 class="form__title">VOUCHER</h1>
-           
+        {% if error %}
+        <p class="form__error">{{ error }}</p>
+        {% endif %}
         <div class="form__container">
         <div class="form__group">
             <label class="form__label" for="exampleInputFullName"></label>
-            <input type="text" class="form__input" id="exampleInputFullName" placeholder="Nombre del que solicita el boucher" name="txtName1">
+            <input type="text" class="form__input" id="exampleInputFullName" placeholder="Nombre del que solicita el boucher" name="txtName1" required>
         </div>
     
         <div class="form__group">
-            <label class="form__label" for="exampleInputFullName"></label>
-            <input type="text" class="form__input" id="exampleInputFullName" placeholder="Nombre del que solicita el boucher" name="txtName2">
+            <label class="form__label" for="exampleInputDNI"></label>
+            <input type="number" class="form__input" id="exampleInputDNI" placeholder="DNI" name="txtDNI" required>
     
-  
-    
-        
-    
-        
-        <button type="submit" class="form__button">GENERAR VOUCHER</button>
 
+        <button type="submit" class="form__button">GENERAR VOUCHER</button>
         
         </div>
     
-
     </form>
     <a href="{{ url_for('login') }}">
         <button type="button" class="sesion__button">CERRAR SESIÓN</button>

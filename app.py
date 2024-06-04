@@ -101,23 +101,36 @@ def register_user():
 #tambien genera el qr para que pueda ser escaneado y descargado por el usuario
 @app.route('/voucher', methods=[ 'POST'])
 def boucher():
+    error = None
     if request.method == 'POST':
         name1 = request.form['txtName1']
-        name2 = request.form['txtName2']
+        dni = request.form['txtDNI']
 
+    if not name1:
+        error = "Error: Name is required"
+    elif not re.match("^[A-Za-zÑñÁÉÍÓÚáéíóú ]*$", name1):
+        error = "Error: Name can only contain letters"
+    elif not dni.isdigit() or len(dni) < 7:
+        error = "Error: DNI must be a number and at least 7 digits long"
+
+    if error:
+        return render_template('voucher.html', error=error)
+
+    try:
+        normalized_name = unicodedata.normalize('NFKD', name1).encode('ASCII', 'ignore').decode('utf-8')
         cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         fecha = datetime.now()
-        cur.execute('INSERT INTO boucher (name1, name2, fecha) VALUES (%s, %s, %s)', (name1, name2, fecha))
+        cur.execute('INSERT INTO boucher (name1, dni, fecha) VALUES (%s, %s, %s)', (normalized_name, dni, fecha))
         mysql.connection.commit()
 
-         # Obtener el estado del voucher
-        cur.execute('SELECT estado FROM boucher WHERE name1 = %s AND name2 = %s', (name1, name2))
+        # Obtener el estado del voucher
+        cur.execute('SELECT estado FROM boucher WHERE name1 = %s AND dni = %s', (normalized_name, dni))
         result = cur.fetchone()
         estado = result['estado']
 
         # Generar el código QR
         if estado == 'active':   
-         data = f"{name1} {name2}"  # Datos para el código QR
+            data = f"{normalized_name} {dni}"  # Datos para el código QR
         else:
             data = 'qr inactivo, genere uno nuevo'
         qr = qrcode.QRCode(
@@ -130,29 +143,31 @@ def boucher():
         qr.make(fit=True)
 
         img = qr.make_image(fill='black', back_color='white')
-        img_filename = f'static/qr/{name1}_{name2}.png'
+        img_filename = f'static/qr/{normalized_name}_{dni}.png'
         img.save(img_filename)
 
-        return redirect(url_for('show_qr', filename=f'{name1}_{name2}.png'))
-
-    return render_template('voucher.html')
+        return redirect(url_for('show_qr', filename=f'{normalized_name}_{dni}.png'))
+    except Exception as e:
+        error = str(e)
+        return render_template('voucher.html', error=error)
+   
 
 #esta ruta muestra el qr generado una vez es enviado el voucher
 # y la informacion es guardada en la base de datos de forma correta 
 @app.route('/show_qr/<filename>', methods=['GET'])
 def show_qr(filename):
-    name1, name2 = filename.split('.')[0].split('_')
+    name1, dni = filename.split('.')[0].split('_')
 
     cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
 
     # Obtener el estado del voucher
-    cur.execute('SELECT estado FROM boucher WHERE name1 = %s AND name2 = %s', (name1, name2))
+    cur.execute('SELECT estado FROM boucher WHERE name1 = %s AND dni = %s', (name1, dni))
     result = cur.fetchone()
     estado = result['estado']
 
     # Generar el código QR
     if estado == 'active':
-        data = f"{name1} {name2}"  # Datos para el código QR
+        data = f"{name1} {dni}"  # Datos para el código QR
     else:
         data = 'qr inactivo, genere uno nuevo'
 
@@ -166,10 +181,10 @@ def show_qr(filename):
     qr.make(fit=True)
 
     img = qr.make_image(fill='black', back_color='white')
-    img_filename = f'static/qr/{name1}_{name2}.png'
+    img_filename = f'static/qr/{name1}_{dni}.png'
     img.save(img_filename)
 
-    return render_template('show_qr.html', filename=f'{name1}_{name2}.png')
+    return render_template('show_qr.html', filename=f'{name1}_{dni}.png')
 
     # aca finalizan todas la rutas del lado del usuario 
     # ahora comienzan la rutas de los administradores 
