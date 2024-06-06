@@ -64,17 +64,22 @@ def login():
         # Si el método es GET, simplemente renderizamos el formulario de inicio de sesión.
         return render_template('index.html')
     
-#esta ruta crea al usuario unavez completada la informacion que se pide en el formulario 
+#esta ruta crea al usuario una vez completada la informacion que se pide en el formulario 
 @app.route('/register-user', methods=['POST'])
 def register_user():
+
     try:
+        print(request.form)
         error = None
         if request.method == 'POST':
             name = request.form['txtFullName']
             email = request.form['txtEmail']
             password = request.form['txtPassword']
             confirm_password = request.form['txtConfirmPassword']
-            branch = request.form['txtBranch']
+            empresa = request.form['txtEmpresa']
+            dni = request.form['txtDni']
+            celular = request.form['txtCelular']
+        
 
             normalized_name = unicodedata.normalize('NFKD', name).encode('ASCII', 'ignore').decode('utf-8')
 
@@ -82,13 +87,17 @@ def register_user():
                  error = "Error: Name is required"
             elif not re.match("^[A-Za-z ]*$", normalized_name):
                 error = "Error: Name can only contain letters"
-            elif not branch:
-                    error = "Error: Branch is required"
+            elif not empresa:
+                    error = "Error: empresa is required"
             elif password != confirm_password:
              error = "Error: Passwords do not match"
+            elif not dni.isdigit() or len(dni) < 7:
+                error = "Error: DNI must be a number and at least 7 digits long"
+            elif not celular.isdigit() or len(celular) < 9:
+                error = "Error: Celular must be a number and at least 9 digits long"
             if error is None:
                 cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-                cur.execute('INSERT INTO users (name, email, password, branch) VALUES (%s, %s, %s, %s)', (name, email, password, branch))
+                cur.execute('INSERT INTO users (name, email, password, empresa, dni, celular) VALUES (%s, %s, %s, %s, %s, %s)', (name, email, password, empresa, dni, celular))
                 mysql.connection.commit()
                 return render_template('index.html')
         return render_template('register.html', error=error)
