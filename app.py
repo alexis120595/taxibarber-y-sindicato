@@ -34,6 +34,10 @@ def register():
 def voucher():
     return render_template('voucher.html')
 
+@app.route('/register_family')
+def register_family_form():
+    return render_template('register_family.html')
+
 #esta es la ruta del inicio de sesion de los usuarios
 @app.route('/acceso-login', methods=['POST', 'GET'])
 def login():
@@ -79,7 +83,7 @@ def register_user():
             empresa = request.form['txtEmpresa']
             dni = request.form['txtDni']
             celular = request.form['txtCelular']
-        
+            familia = int(request.form['txtFamilia'])
 
             normalized_name = unicodedata.normalize('NFKD', name).encode('ASCII', 'ignore').decode('utf-8')
 
@@ -95,16 +99,48 @@ def register_user():
                 error = "Error: DNI must be a number and at least 7 digits long"
             elif not celular.isdigit() or len(celular) < 9:
                 error = "Error: Celular must be a number and at least 9 digits long"
+
             if error is None:
+                if familia > 0:
+                    return render_template('register_family.html')
+                
                 cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-                cur.execute('INSERT INTO users (name, email, password, empresa, dni, celular) VALUES (%s, %s, %s, %s, %s, %s)', (name, email, password, empresa, dni, celular))
+                cur.execute('INSERT INTO users (name, email, password, empresa, dni, celular, familia) VALUES (%s, %s, %s, %s, %s, %s, %s)', (name, email, password, empresa, dni, celular, familia))
                 mysql.connection.commit()
+
+               
                 return render_template('index.html')
         return render_template('register.html', error=error)
     except Exception as e:
         # Aquí puedes manejar el error como quieras. Por ejemplo, puedes imprimir el error y devolver un mensaje de error al usuario.
         print(e)
         return "An error occurred while processing your request. Please try again later.", 500
+    
+@app.route('/register_family', methods=['POST'])
+def register_family():
+    try:
+        print(request.form)
+        # Obtén los datos del formulario
+        nombres = request.form.getlist('nombreHijo[]')
+        dnis = request.form.getlist('dniHijo[]')
+        relationships = request.form.getlist('relationship[]')
+       
+
+        # Crea un cursor
+        cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        for nombre, dni, relationship in zip(nombres, dnis, relationships):
+        # Ejecuta la consulta SQL para insertar los datos en la base de datos
+         cur.execute('INSERT INTO family (nombre, dni, relationship) VALUES (%s, %s, %s)', (nombre, dni, relationship))
+
+        # Confirma la transacción
+        mysql.connection.commit()
+
+        # Redirige al usuario a la página de inicio
+        return render_template('index.html')
+    except Exception as e:
+        # Imprime el error y devuelve un mensaje de error al usuario
+        print(e)
+        return "An error occurred while processing your request. Please try again later.", 500   
     
 #esta ruta crea el voucher una vez completada la informacion que se pide en el formulario 
 #tambien genera el qr para que pueda ser escaneado y descargado por el usuario

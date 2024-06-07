@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Título de la página</title>
+</head>
+<body>
+  <form action="register_family" method="post" class="form">
+
+    <div id="hijos">
+        <div class="form__group hijo">
+            <label class="form__label" for="exampleInputNombreHijo1"></label>
+            <input type="text" class="form__input" id="exampleInputNombreHijo1" placeholder="Nombre del hijo" name="nombreHijo[]" required>
+    
+            <label class="form__label" for="exampleInputDniHijo1"></label>
+            <input type="text" class="form__input" id="exampleInputDniHijo1" placeholder="DNI del hijo" name="dniHijo[]" required>
+    
+            <label class="form__label" for="exampleInputRelationship1"></label>
+            <input type="text" class="form__input" id="exampleInputRelationship1" placeholder="Parentezco" name="relationship[]" required>
+        </div>
+    </div>
+<button id="agregarHijo" type="button">Agregar otro hijo</button>
+
+<button type="submit" class="form__button">ENVIAR</button>
+</div>
+
+</form>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function() {
+        var i = 2;
+        $('#agregarHijo').click(function(e) {
+            e.preventDefault();
+            $('#hijos').append('<div class="form__group hijo"><label class="form__label" for="exampleInputNombreHijo' + i + '"></label><input type="text" class="form__input" id="exampleInputNombreHijo' + i + '" placeholder="Nombre del hijo" name="nombreHijo[]" required><label class="form__label" for="exampleInputDniHijo' + i + '"></label><input type="text" class="form__input" id="exampleInputDniHijo' + i + '" placeholder="DNI del hijo" name="dniHijo[]" required><label class="form__label" for="exampleInputRelationship' + i + '"></label><input type="text" class="form__input" id="exampleInputRelationship' + i + '" placeholder="Parentezco" name="relationship[]" required></div>');
+            i++;
+        });
+    });
+</script>
+</body>
+</html>
