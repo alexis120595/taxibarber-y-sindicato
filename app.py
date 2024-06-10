@@ -83,7 +83,7 @@ def register_user():
             empresa = request.form['txtEmpresa']
             dni = request.form['txtDni']
             celular = request.form['txtCelular']
-            familia = int(request.form['txtFamilia'])
+            familia = request.form['txtFamilia']
 
             normalized_name = unicodedata.normalize('NFKD', name).encode('ASCII', 'ignore').decode('utf-8')
 
@@ -101,9 +101,7 @@ def register_user():
                 error = "Error: Celular must be a number and at least 9 digits long"
 
             if error is None:
-                if familia > 0:
-                    return render_template('register_family.html')
-                
+              
                 cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
                 cur.execute('INSERT INTO users (name, email, password, empresa, dni, celular, familia) VALUES (%s, %s, %s, %s, %s, %s, %s)', (name, email, password, empresa, dni, celular, familia))
                 mysql.connection.commit()
@@ -124,13 +122,14 @@ def register_family():
         nombres = request.form.getlist('nombreHijo[]')
         dnis = request.form.getlist('dniHijo[]')
         relationships = request.form.getlist('relationship[]')
+        dni_padre = request.form.getlist('dniPadre[]')
        
 
         # Crea un cursor
         cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        for nombre, dni, relationship in zip(nombres, dnis, relationships):
+        for nombre, dni, relationship, user_dni in zip(nombres, dnis, relationships, dni_padre):
         # Ejecuta la consulta SQL para insertar los datos en la base de datos
-         cur.execute('INSERT INTO family (nombre, dni, relationship) VALUES (%s, %s, %s)', (nombre, dni, relationship))
+         cur.execute('INSERT INTO family (nombre, dni, relationship, user_dni) VALUES (%s, %s, %s, %s)', (nombre, dni, relationship, user_dni))
 
         # Confirma la transacción
         mysql.connection.commit()

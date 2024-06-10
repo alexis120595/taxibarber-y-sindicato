@@ -16,6 +16,9 @@
     
             <label class="form__label" for="exampleInputRelationship1"></label>
             <input type="text" class="form__input" id="exampleInputRelationship1" placeholder="Parentezco" name="relationship[]" required>
+
+            <label class="form__label" for="exampleInputDniPadre"></label>
+            <input type="number" class="form__input" id="exampleInputDniPadre" placeholder="DNI del padre" name="dniPadre[]" required>
         </div>
     </div>
 <button id="agregarHijo" type="button">Agregar otro hijo</button>
@@ -31,7 +34,7 @@
         var i = 2;
         $('#agregarHijo').click(function(e) {
             e.preventDefault();
-            $('#hijos').append('<div class="form__group hijo"><label class="form__label" for="exampleInputNombreHijo' + i + '"></label><input type="text" class="form__input" id="exampleInputNombreHijo' + i + '" placeholder="Nombre del hijo" name="nombreHijo[]" required><label class="form__label" for="exampleInputDniHijo' + i + '"></label><input type="text" class="form__input" id="exampleInputDniHijo' + i + '" placeholder="DNI del hijo" name="dniHijo[]" required><label class="form__label" for="exampleInputRelationship' + i + '"></label><input type="text" class="form__input" id="exampleInputRelationship' + i + '" placeholder="Parentezco" name="relationship[]" required></div>');
+            $('#hijos').append('<div class="form__group hijo"><label class="form__label" for="exampleInputNombreHijo' + i + '"></label><input type="text" class="form__input" id="exampleInputNombreHijo' + i + '" placeholder="Nombre del hijo" name="nombreHijo[]" required><label class="form__label" for="exampleInputDniHijo' + i + '"></label><input type="text" class="form__input" id="exampleInputDniHijo' + i + '" placeholder="DNI del hijo" name="dniHijo[]" required><label class="form__label" for="exampleInputRelationship' + i + '"></label><input type="text" class="form__input" id="exampleInputRelationship' + i + '" placeholder="Parentezco" name="relationship[]" required><label class="form__label" for="exampleInputDniPadre' + i + '"></label><input type="text" class="form__input" id="exampleInputDniPadre' + i + '" placeholder="DNI del padre" name="dniPadre[]" required></div>');
             i++;
         });
     });
