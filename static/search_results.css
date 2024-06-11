@@ -14,6 +14,10 @@
     width: 30%;
     text-align: center;
     aspect-ratio: 1/1; /* Add this line to make the card square */
+    display: flex; /* Add this line */
+    align-items: center; /* Add this line */
+    justify-content: center; /* Add this line */
+    flex-direction: column; /* Add this line to stack the items vertically */
 }
 
 

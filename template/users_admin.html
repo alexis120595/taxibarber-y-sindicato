@@ -22,7 +22,6 @@
                 <tr>
                     <th>ID</th>
                     <th>Nombre</th>
-                    <th>Email</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -32,9 +31,7 @@
                     <tr>
                         <td>{{ user.id }}</td>
                         <td>{{ user.name }}</td>
-                        <td>{{ user.email }}</td>
                         <td>
-                            
                             <form method="POST" action="{{ url_for('delete_user', id=user.id) }}">
                                 <button class="delete" type="submit">Delete</button>
                             </form>

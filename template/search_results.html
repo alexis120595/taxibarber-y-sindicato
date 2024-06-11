@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="static/search_results.css">
 </head>
 <body>
-    <button class="btn" onclick="location.href='/users-admin'">Volver a la base de datos</button>
+    <button class="btn" onclick="location.href='/users-admin'">VOLVER</button>
     <div class="container">
         
         <h1>DETALLE DEL USUARIO</h1>
@@ -13,10 +13,12 @@
         {% if users %}
             {% for user in users %}
                 <div class="card">
-                    <h2>{{ user.name }} {{ user.surname }}</h2>
-                    <p>{{ user.job_title }}</p>
-                    <p>{{ user.company }}</p>
-                    <p>{{ user.email }}</p>
+                    <h2>Nombre: {{ user.name }} {{ user.surname }}</h2>
+                    <h2>Email: {{ user.email }}</h2>
+                    <h2>Empresa: {{ user.empresa }}</h2>
+                    <h2>Dni: {{ user.dni }}</h2>
+                    <h2>Celular: {{ user.celular }}</h2>
+                    <h2>Familia: {{ user.familia }}</h2>
                 </div>
             {% endfor %}
         {% else %}
