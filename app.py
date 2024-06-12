@@ -269,6 +269,14 @@ def delete_user(id):
     mysql.connection.commit()
     return redirect(url_for('users_admin'))
 
+@app.route('/users-admin', methods=['POST'])
+def update_estado():
+    id = request.form.get('id')
+    estado = request.form.get('estado')
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cur.execute('UPDATE users SET estado = %s WHERE id = %s', (estado, id))
+    mysql.connection.commit()
+    return {'message': 'usuario activado'}
 
 # esta ruta nos permite editar los usuarios de la base de datos
 @app.route('/users-admin/<int:id>', methods=['PUT'])
@@ -322,29 +330,37 @@ def graph():
     return render_template('graficos.html')
 
 # esta ruta nos permite obtener los datos para el grafico
-#en este caso se obtiene la cantidad de voucher generados por mes
+#en este caso se obtiene la cantidad de voucher generados por dia
 @app.route('/data_for_graph')
 def data_for_graph():
-    # Crea un cursor
+    # Create a cursor
     cur = mysql.connection.cursor()
     
-    cur.execute("SELECT DATE_FORMAT(fecha, '%Y-%m') as fecha, COUNT(*) as count FROM boucher GROUP BY DATE_FORMAT(fecha, '%Y-%m')")
+    # Modify the SQL query to group by both date and status
+    cur.execute("""
+        SELECT DATE_FORMAT(fecha, '%Y-%m-%d') as fecha_formateada, estado, COUNT(*) as count 
+        FROM boucher 
+        GROUP BY fecha_formateada, estado
+    """)
     
     rows = cur.fetchall()
 
-    # Separa los resultados en dos listas
-    x_data = [row['fecha'] for row in rows]
-    y_data = [row['count'] for row in rows]
+    # Separate the results into lists for each status
+    x_data_active = [row['fecha_formateada'] for row in rows if row['estado'] == 'active']
+    y_data_active = [row['count'] for row in rows if row['estado'] == 'active']
+    x_data_inactive = [row['fecha_formateada'] for row in rows if row['estado'] == 'inactive']
+    y_data_inactive = [row['count'] for row in rows if row['estado'] == 'inactive']
 
-    # Crea el gráfico
-    fig = go.Figure(data=go.Bar(x=x_data, y=y_data))
+    # Create the graph with separate traces for each status
+    fig = go.Figure()
+    fig.add_trace(go.Bar(x=x_data_active, y=y_data_active, name='active'))
+    fig.add_trace(go.Bar(x=x_data_inactive, y=y_data_inactive, name='inactive'))
 
-    # Convierte el gráfico a JSON
+    # Convert the graph to JSON
     graph_json = pio.to_json(fig)
 
-    # Envía el gráfico como JSON
+    # Send the graph as JSON
     return jsonify(graph_json=graph_json)
-
   
 if __name__ == '__main__':
     app.secret_key = "alexis"

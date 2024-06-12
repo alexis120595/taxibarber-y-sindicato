@@ -23,6 +23,8 @@
                     <th>ID</th>
                     <th>Nombre</th>
                     <th>Acciones</th>
+                    <th>Usarios</th>
+                    <th>Slide</th>
                 </tr>
             </thead>
             <tbody>
@@ -36,6 +38,13 @@
                                 <button class="delete" type="submit">Delete</button>
                             </form>
                         </td>
+                        <td id="estado-{{ user.id }}">{{ user.estado }}</td>
+                        <td>
+                            <label class="switch">
+                                <input type="checkbox" data-id="{{ user.id }}" {% if user.estado != 'inactive' %}checked{% endif %}>
+                                <span class="slider round"></span>
+                            </label>   
+                        </td>
                     </tr>
                 {% endfor %}
             </tbody>
@@ -44,7 +53,25 @@
         <p>No hay usuarios</p>
     {% endif %}
 </div>
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+   
+    $('input[type="checkbox"]').change(function() {
+    var id = $(this).data('id');
+    var estado = $(this).is(':checked') ? 'active' : 'inactive';
+    
+    $.post('/users-admin', { id: id, estado: estado })
+        .done(function(response) {
+            $('#estado-' + id).text(estado);
+            alert(response.message);
+        })
+        .fail(function() {
+            alert('Hubo un error al actualizar el estado del voucher');
+        });
+   });
+});
+</script>
 
 </body>
 </html>
