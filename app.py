@@ -34,6 +34,10 @@ def register():
 def voucher():
     return render_template('voucher.html')
 
+@app.route('/estadisticas-empresas')
+def estadisticas_empresas():
+    return render_template('estadisticas_por_empresas.html')    
+
 @app.route('/register_family')
 def register_family_form():
     return render_template('register_family.html')
@@ -355,6 +359,34 @@ def data_for_graph():
     fig = go.Figure()
     fig.add_trace(go.Bar(x=x_data_active, y=y_data_active, name='active'))
     fig.add_trace(go.Bar(x=x_data_inactive, y=y_data_inactive, name='inactive'))
+
+    # Convert the graph to JSON
+    graph_json = pio.to_json(fig)
+
+    # Send the graph as JSON
+    return jsonify(graph_json=graph_json)
+
+@app.route('/companies')
+def companies():
+    # Create a cursor
+    cur = mysql.connection.cursor()
+    
+    # Execute a SQL query to count users by company
+    cur.execute("""
+        SELECT empresa, COUNT(*) as user_count 
+        FROM users 
+        GROUP BY empresa 
+        ORDER BY user_count DESC
+    """)
+    
+    rows = cur.fetchall()
+
+    # Prepare the data for the graph
+    empresas = [row['empresa'] for row in rows]
+    user_counts = [row['user_count'] for row in rows]
+
+    # Create the graph
+    fig = go.Figure(data=[go.Bar(x=empresas, y=user_counts)])
 
     # Convert the graph to JSON
     graph_json = pio.to_json(fig)

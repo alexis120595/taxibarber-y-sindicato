@@ -10,11 +10,11 @@
 <body>
     
     <div id="myDiv"><!-- El gráfico de Plotly se dibujará dentro de este DIV --></div>
-    <a href="/listado-voucher" class="btn">Volver<a>
-    <a href="/estadisticas-empresas" class="btn1">Estadisticas por empresa<a>
+    <a href="/graficos" class="btn">Volver<a>
+    
     <script>
     $(document).ready(function() {
-        $.getJSON('/data_for_graph', function(data) {
+        $.getJSON('/companies', function(data) {
             var graphData = JSON.parse(data.graph_json);
             Plotly.newPlot('myDiv', graphData);
         });
