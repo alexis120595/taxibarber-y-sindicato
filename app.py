@@ -178,7 +178,9 @@ def boucher():
 
         # Generar el código QR
         if estado == 'active':   
-            data = f"{normalized_name} {dni}"  # Datos para el código QR
+            url_base = 'https://0c68-45-189-217-93.ngrok-free.app'
+            ruta = '/listado-voucher'
+            data = f"{url_base}{ruta}"  # Datos para el código QR
         else:
             data = 'qr inactivo, genere uno nuevo'
         qr = qrcode.QRCode(
@@ -215,7 +217,9 @@ def show_qr(filename):
 
     # Generar el código QR
     if estado == 'active':
-        data = f"{name1} {dni}"  # Datos para el código QR
+        url_base = 'https://0c68-45-189-217-93.ngrok-free.app'
+        ruta = '/listado-voucher'
+        data = f"{url_base}{ruta}"   # Datos para el código QR
     else:
         data = 'qr inactivo, genere uno nuevo'
 
@@ -233,6 +237,7 @@ def show_qr(filename):
     img.save(img_filename)
 
     return render_template('show_qr.html', filename=f'{name1}_{dni}.png')
+
 
     # aca finalizan todas la rutas del lado del usuario 
     # ahora comienzan la rutas de los administradores 
