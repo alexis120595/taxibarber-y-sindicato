@@ -38,9 +38,9 @@ def voucher():
 def estadisticas_empresas():
     return render_template('estadisticas_por_empresas.html')    
 
-@app.route('/register_family')
-def register_family_form():
-    return render_template('register_family.html')
+@app.route('/detalle-voucher')
+def detalle_voucher():
+    return render_template('detalle_voucher.html')
 
 #esta es la ruta del inicio de sesion de los usuarios
 @app.route('/acceso-login', methods=['POST', 'GET'])
@@ -178,8 +178,8 @@ def boucher():
 
         # Generar el código QR
         if estado == 'active':   
-            url_base = 'https://0c68-45-189-217-93.ngrok-free.app'
-            ruta = '/listado-voucher'
+            url_base = 'https://87f7-45-189-217-93.ngrok-free.app'
+            ruta = '/buscador-dni'  
             data = f"{url_base}{ruta}"  # Datos para el código QR
         else:
             data = 'qr inactivo, genere uno nuevo'
@@ -217,8 +217,8 @@ def show_qr(filename):
 
     # Generar el código QR
     if estado == 'active':
-        url_base = 'https://0c68-45-189-217-93.ngrok-free.app'
-        ruta = '/listado-voucher'
+        url_base = 'https://87f7-45-189-217-93.ngrok-free.app'
+        ruta = '/buscador-dni'
         data = f"{url_base}{ruta}"   # Datos para el código QR
     else:
         data = 'qr inactivo, genere uno nuevo'
@@ -332,6 +332,35 @@ def update_voucher():
     cur.execute('UPDATE boucher SET estado = %s WHERE id = %s', (estado, id))
     mysql.connection.commit()
     return {'message': 'Voucher actualizado correctamente'}
+
+@app.route('/search-voucher', methods=['GET', 'POST'])
+def search_voucher():
+    data = []
+    if request.method == 'POST':
+        search_dni = request.form.get('dni', None)
+        if search_dni:
+            cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cur.execute('SELECT * FROM boucher WHERE dni = %s', [search_dni])
+            data = cur.fetchall()
+            print(data)
+            cur.close()
+
+        else:    
+              return {'error': 'El campo DNI es requerido'}, 400
+        
+    return render_template('detalle_voucher.html', boucher=data)
+
+@app.route('/buscador-dni', methods=['GET', 'POST'])
+def buscador_dni():
+    if request.method == 'POST':
+        dni = request.form.get('dni', None)
+        if dni:
+            cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cur.execute('SELECT * FROM boucher WHERE dni = %s', [dni])
+            data = cur.fetchone()
+            cur.close()
+           
+    return render_template('buscador_dni.html')
 
 # esta ruta nos renderiza la plantilla de los graficos
 @app.route('/graficos')

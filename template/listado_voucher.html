@@ -11,7 +11,11 @@
            LISTA DE VOUCHERS
         </h1>
         <a href="/users-admin" class="btn">VOLVER </a>
+
         <a href="/graficos" class="btn">GRÁFICOS</a>
+
+        <a href="/buscador-dni" class="btn">VER VOUCHER</a>
+
         {% if boucher %}
             <table>
                 <thead>
@@ -20,7 +24,7 @@
                         <th>Nombre</th>
                         <th>Dni</th>
                         <th>Estado</th>
-                        <th>Slide</th>
+                        <th>Fecha de creacion</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -30,12 +34,7 @@
                             <td>{{ voucher.name1 }}</td>
                             <td>{{ voucher.dni }}</td>
                             <td id="estado-{{ voucher.id }}">{{ voucher.estado }}</td>
-                            <td>
-                                <label class="switch">
-                                    <input type="checkbox" data-id="{{ voucher.id }}" {% if voucher.estado == 'active' %}checked{% endif %}>
-                                    <span class="slider round"></span>
-                                </label>   
-                            </td>
+                            <td>{{voucher.fecha}} </td>
                         </tr>
                     {% endfor %}
                 </tbody>

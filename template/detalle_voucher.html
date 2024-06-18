@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search Results</title>
+    <link rel="stylesheet" href="static/detalle_voucher.css">
+</head>
+<body>
+   
+    <div class="container">
+        
+        <h1>DETALLE DEL VOUCHER</h1>
+        
+        {% if boucher %}
+            {% for voucher in boucher %}
+                <div class="card">
+                    <h2>Nombre: {{ voucher.name1 }}</h2>
+                    <h2>Dni: {{ voucher.dni }}</h2>
+                    <td id="estado-{{ voucher.id }}">Estado:{{ voucher.estado }}</td>
+                    <td>
+                        <label class="switch">
+                            <input type="checkbox" data-id="{{ voucher.id }}" {% if voucher.estado == 'active' %}checked{% endif %}>
+                            <span class="slider round"></span>
+                        </label>   
+                    </td>
+                    
+                  
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No se encontro el voucher.</p>
+        {% endif %}
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+    $(document).ready(function(){
+       
+        $('input[type="checkbox"]').change(function() {
+        var id = $(this).data('id');
+        var estado = $(this).is(':checked') ? 'active' : 'inactive';
+        
+        $.post('/listado-voucher', { id: id, estado: estado })
+            .done(function(response) {
+                $('#estado-' + id).text(estado);
+                alert(response.message);
+            })
+            .fail(function() {
+                alert('Hubo un error al actualizar el estado del voucher');
+            });
+       });
+    });
+    </script>
+   
+</body>
+</html>
