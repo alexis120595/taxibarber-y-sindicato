@@ -13,17 +13,17 @@
         {% if boucher %}
             {% for voucher in boucher %}
                 <div class="card">
+
                     <h2>Nombre: {{ voucher.name1 }}</h2>
                     <h2>Dni: {{ voucher.dni }}</h2>
-                    <td id="estado-{{ voucher.id }}">Estado:{{ voucher.estado }}</td>
+                    <td class="td1" id="estado-{{ voucher.id }}"><h2>Estado: {{ voucher.estado }}</td></h2>
                     <td>
                         <label class="switch">
                             <input type="checkbox" data-id="{{ voucher.id }}" {% if voucher.estado == 'active' %}checked{% endif %}>
                             <span class="slider round"></span>
                         </label>   
                     </td>
-                    
-                  
+          
                 </div>
             {% endfor %}
         {% else %}

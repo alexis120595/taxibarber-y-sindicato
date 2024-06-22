@@ -118,33 +118,7 @@ def register_user():
         print(e)
         return "An error occurred while processing your request. Please try again later.", 500
     
-@app.route('/register_family', methods=['POST'])
-def register_family():
-    try:
-        print(request.form)
-        # Obtén los datos del formulario
-        nombres = request.form.getlist('nombreHijo[]')
-        dnis = request.form.getlist('dniHijo[]')
-        relationships = request.form.getlist('relationship[]')
-        dni_padre = request.form.getlist('dniPadre[]')
-       
 
-        # Crea un cursor
-        cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        for nombre, dni, relationship, user_dni in zip(nombres, dnis, relationships, dni_padre):
-        # Ejecuta la consulta SQL para insertar los datos en la base de datos
-         cur.execute('INSERT INTO family (nombre, dni, relationship, user_dni) VALUES (%s, %s, %s, %s)', (nombre, dni, relationship, user_dni))
-
-        # Confirma la transacción
-        mysql.connection.commit()
-
-        # Redirige al usuario a la página de inicio
-        return render_template('index.html')
-    except Exception as e:
-        # Imprime el error y devuelve un mensaje de error al usuario
-        print(e)
-        return "An error occurred while processing your request. Please try again later.", 500   
-    
 #esta ruta crea el voucher una vez completada la informacion que se pide en el formulario 
 #tambien genera el qr para que pueda ser escaneado y descargado por el usuario
 @app.route('/voucher', methods=[ 'POST'])
@@ -238,6 +212,47 @@ def show_qr(filename):
 
     return render_template('show_qr.html', filename=f'{name1}_{dni}.png')
 
+#esta ruta nos permite buscar por dni a los voucher de la base de datos
+@app.route('/search-voucher', methods=['GET', 'POST'])
+def search_voucher():
+    data = []
+    if request.method == 'POST':
+        search_dni = request.form.get('dni', None)
+        if search_dni:
+            cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cur.execute('SELECT * FROM boucher WHERE dni = %s', [search_dni])
+            data = cur.fetchall()
+            print(data)
+            cur.close()
+
+        else:    
+              return {'error': 'El campo DNI es requerido'}, 400
+        
+    return render_template('detalle_voucher.html', boucher=data)
+
+#esta ruta nos va a renderizar la plantilla del buscador de dni desde el qr 
+@app.route('/buscador-dni', methods=['GET', 'POST'])
+def buscador_dni():
+    if request.method == 'POST':
+        dni = request.form.get('dni', None)
+        if dni:
+            cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cur.execute('SELECT * FROM boucher WHERE dni = %s', [dni])
+            data = cur.fetchone()
+            cur.close()
+           
+    return render_template('buscador_dni.html')
+
+#esta ruta nos permite actualizar el estado de los voucher
+@app.route('/listado-voucher', methods=['POST'])
+def update_voucher():
+    id = request.form.get('id')
+    estado = request.form.get('estado')
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cur.execute('UPDATE boucher SET estado = %s WHERE id = %s', (estado, id))
+    mysql.connection.commit()
+    return {'message': 'Voucher actualizado correctamente'}
+
 
     # aca finalizan todas la rutas del lado del usuario 
     # ahora comienzan la rutas de los administradores 
@@ -278,6 +293,7 @@ def delete_user(id):
     mysql.connection.commit()
     return redirect(url_for('users_admin'))
 
+# esta ruta nos permite actualizar el estado de los usuarios de la base de datos
 @app.route('/users-admin', methods=['POST'])
 def update_estado():
     id = request.form.get('id')
@@ -323,45 +339,6 @@ def vouchers():
     
     return render_template('listado_voucher.html', boucher=data)
 
-#esta ruta nos permite actualizar el estado de los voucher
-@app.route('/listado-voucher', methods=['POST'])
-def update_voucher():
-    id = request.form.get('id')
-    estado = request.form.get('estado')
-    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    cur.execute('UPDATE boucher SET estado = %s WHERE id = %s', (estado, id))
-    mysql.connection.commit()
-    return {'message': 'Voucher actualizado correctamente'}
-
-@app.route('/search-voucher', methods=['GET', 'POST'])
-def search_voucher():
-    data = []
-    if request.method == 'POST':
-        search_dni = request.form.get('dni', None)
-        if search_dni:
-            cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cur.execute('SELECT * FROM boucher WHERE dni = %s', [search_dni])
-            data = cur.fetchall()
-            print(data)
-            cur.close()
-
-        else:    
-              return {'error': 'El campo DNI es requerido'}, 400
-        
-    return render_template('detalle_voucher.html', boucher=data)
-
-@app.route('/buscador-dni', methods=['GET', 'POST'])
-def buscador_dni():
-    if request.method == 'POST':
-        dni = request.form.get('dni', None)
-        if dni:
-            cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cur.execute('SELECT * FROM boucher WHERE dni = %s', [dni])
-            data = cur.fetchone()
-            cur.close()
-           
-    return render_template('buscador_dni.html')
-
 # esta ruta nos renderiza la plantilla de los graficos
 @app.route('/graficos')
 def graph():
@@ -400,6 +377,7 @@ def data_for_graph():
     # Send the graph as JSON
     return jsonify(graph_json=graph_json)
 
+#esta ruta nos permite obtener los datos de las empresas para el grafico
 @app.route('/companies')
 def companies():
     # Create a cursor

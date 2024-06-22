@@ -44,6 +44,7 @@
     display: inline-block;
     width: 60px;
     height: 34px;
+    
 }
 .switch input {
     opacity: 0;
@@ -84,3 +85,6 @@ input:checked + .slider:before {
 }
 
 
+.td1 {
+    font-size: 40px; 
+}
