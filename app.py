@@ -254,6 +254,7 @@ def update_voucher():
     return {'message': 'Voucher actualizado correctamente'}
 
 
+
     # aca finalizan todas la rutas del lado del usuario 
     # ahora comienzan la rutas de los administradores 
 
@@ -405,6 +406,10 @@ def companies():
 
     # Send the graph as JSON
     return jsonify(graph_json=graph_json)
+
+@app.route('/admin-sindicato')
+def sindicato():
+    return render_template('admin_sindicato.html')
   
 if __name__ == '__main__':
     app.secret_key = "alexis"
