@@ -51,14 +51,17 @@ def login():
 
         try:
             cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-            cur.execute('SELECT * FROM users WHERE email = %s', (email,))
-            user = cur.fetchone()
-
-            if user is None:
-                return render_template('index.html', error="User not registered.")
-            
+            # Actualizar la consulta para incluir el estado del usuario
             cur.execute('SELECT * FROM users WHERE email = %s AND password = %s', (email, password,))
             account = cur.fetchone()
+
+            if account is None:
+                return render_template('index.html', error="User not registered or invalid password.")
+
+            # Verificar si el estado del usuario es 'inactive'
+            if account['estado'] == 'inactive':
+                return render_template('index.html', error="This account is inactive.")
+            
         except Exception as e:
             return render_template('index.html', error="Database error: " + str(e))
         
@@ -66,8 +69,6 @@ def login():
             session['loggedin'] = True
             session['id'] = account['id']
             return render_template('voucher.html')
-        else:
-            return render_template('index.html', error="Invalid password.")
     else:
         # Si el método es GET, simplemente renderizamos el formulario de inicio de sesión.
         return render_template('index.html')
@@ -302,9 +303,14 @@ def update_estado():
     cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     cur.execute('UPDATE users SET estado = %s WHERE id = %s', (estado, id))
     mysql.connection.commit()
-    return {'message': 'usuario activado'}
+    
+    if estado == 'active':
+        message = 'Usuario activado correctamente'
+    elif estado == 'inactive':
+        message = 'Usuario desactivado correctamente'
+    return {'message': message}
 
-# esta ruta nos permite editar los usuarios de la base de datos
+# esta ruta nos permite editar los usuarios de la base de datos, ests ruta no esta implementada en el front
 @app.route('/users-admin/<int:id>', methods=['PUT'])
 def update_user(id):
     cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -407,9 +413,31 @@ def companies():
     # Send the graph as JSON
     return jsonify(graph_json=graph_json)
 
-@app.route('/admin-sindicato')
-def sindicato():
-    return render_template('admin_sindicato.html')
+@app.route('/acceso-barbero')
+def barbero():
+    return render_template('login_barbero.html')
+
+@app.route('/inicio-barbero')
+def inicio_barbero():
+    return render_template('inicio_barbero.html')
+
+@app.route('/acceso-barbero', methods=['GET', 'POST'])
+def login_barbero():
+    if request.method == 'POST':
+        name = request.form.get('txtBarberoName')
+        password = request.form.get('txtPassword')
+        cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cur.execute('SELECT * FROM barbero WHERE name = %s AND password = %s', (name, password,))
+        account = cur.fetchone()
+
+        if account:
+            session['loggedin'] = True
+            session['id'] = account['id']
+            return redirect(url_for('inicio_barbero'))
+        else:
+            return render_template('login_barbero.html', error="Invalid username or password.")
+    else:
+        return render_template('login_barbero.html')
   
 if __name__ == '__main__':
     app.secret_key = "alexis"

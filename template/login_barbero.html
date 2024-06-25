@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Template</title>
+   
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" type="text/css" href="/static/loginadmin.css">
+   
+</head>
+
+<body>
+    
+   <div class="form">
+    
+    <form class="form-control" action="acceso-barbero" method="post">
+        <h2 class="form__title"> BARBERO</h2>
+        <div class="form__group">
+            <label for="exampleInputBarberoName" class="form__label"></label>
+            <input type="text" class="form-control form__input" id="exampleInputBarberoName" aria-describedby="barberoNameHelp" placeholder="Enter user name" name="txtBarberoName" required>
+            <small id="barberoNameHelp" class="form-text text-muted form__paragraph">.</small>
+        </div>
+        <div class="form__group">
+            <label for="exampleInputPassword" class="form__label"></label>
+            <input type="password" class="form-control form__input" id="exampleInputPassword" placeholder="Password" name="txtPassword" required>
+        </div>
+        <div class="form-check">
+       
+        </div>
+        <button type="submit" class="btn btn-primary form__button">INGRESAR</button>
+    </form>
+   </div>
+</body>
+</html>
