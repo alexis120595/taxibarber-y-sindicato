@@ -483,6 +483,86 @@ def ingresar_datos():
     except Exception as e:
         print("Error al insertar en la base de datos:", e)
         return render_template('voucher_barberia.html', mensaje="Error al ingresar los datos: " + str(e))
+    
+@app.route('/listado-cortes', methods=['GET'])
+def lista_cortes():
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cur.execute('SELECT * FROM corte')
+    data = cur.fetchall()
+    
+    return render_template('listado_cortes.html', corte=data)
+
+@app.route('/listado-voucher-barbero', methods=['GET'])
+def lista_voucher_barbero():
+    cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cur.execute('SELECT * FROM voucher_barbero')
+    data = cur.fetchall()
+    
+    return render_template('listado_voucher_barbero.html', voucher_barbero=data)
+
+@app.route('/estadisticas-cortes')
+def estadisticas_cortes():
+    return render_template('estadisticas_cortes.html')    
+
+@app.route('/corte')
+def corte():
+    # Create a cursor
+    cur = mysql.connection.cursor()
+    
+    # Execute a SQL query to count users by company
+    cur.execute("""
+        SELECT barbero, COUNT(*) as user_count 
+        FROM corte
+        GROUP BY barbero 
+        ORDER BY user_count DESC
+    """)
+    
+    rows = cur.fetchall()
+
+    # Prepare the data for the graph
+    barbero = [row['barbero'] for row in rows]
+    user_counts = [row['user_count'] for row in rows]
+
+    # Create the graph
+    fig = go.Figure(data=[go.Bar(x=barbero, y=user_counts)])
+
+    # Convert the graph to JSON
+    graph_json = pio.to_json(fig)
+
+    # Send the graph as JSON
+    return jsonify(graph_json=graph_json)
+
+@app.route('/estadisticas-voucher-barbero')
+def estadisticas_voucher_barbero():
+    return render_template('estadisticas_voucher_barbero.html') 
+
+@app.route('/estadisticas-barbero')
+def estadisticas_barbero():
+    # Create a cursor
+    cur = mysql.connection.cursor()
+    
+    # Execute a SQL query to count users by company
+    cur.execute("""
+        SELECT barbero, DATE(fecha) as fecha, COUNT(*) as voucher_count 
+        FROM voucher_barbero
+        GROUP BY barbero, DATE(fecha)
+        ORDER BY fecha DESC, voucher_count DESC
+    """)
+    
+    rows = cur.fetchall()
+
+    # Prepare the data for the graph
+    labels = [f"{row['fecha']} - {row['barbero']}" for row in rows]
+    voucher_counts = [row['voucher_count'] for row in rows]
+
+    # Create the graph
+    fig = go.Figure(data=[go.Bar(x=labels, y=voucher_counts)])
+
+    # Convert the graph to JSON
+    graph_json = pio.to_json(fig)
+
+    # Send the graph as JSON
+    return jsonify(graph_json=graph_json)
   
 if __name__ == '__main__':
     app.secret_key = "alexis"

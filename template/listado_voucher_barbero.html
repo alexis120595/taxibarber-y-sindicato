@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Título de la página</title>
+    <link rel="stylesheet" href="static/listvoucher.css">
+</head>
+<body>
+
+    <div class=""> 
+        <h1 class="title" >
+           LISTA DE VOUCHER BARBERO
+        </h1>
+        <a href="/users-admin" class="btn">VOLVER </a>
+
+        <a href="/graficos" class="btn">GRÁFICOS</a>
+
+        <a href="/buscador-dni" class="btn">VER VOUCHER</a>
+
+        {% if voucher_barbero %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Barbero</th>
+                        <th>Fecha de creacion</th>
+                        <th>DNI</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for voucher_barbero in voucher_barbero %}
+                        <tr>
+                            <td>{{ voucher_barbero.id }}</td>
+                            <td>{{ voucher_barbero.cliente }}</td>
+                            <td>{{ voucher_barbero.barbero}}</td>
+                            <td>{{voucher_barbero.fecha}} </td>
+                            <td>{{voucher_barbero.dni}}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No hay voucher </p>
+        {% endif %}
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+
+</body>
+</html>
