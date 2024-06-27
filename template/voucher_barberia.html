@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi página web</title>
+    <link rel="stylesheet" href="static/estilos.css">
+</head>
+<body>
+    <form class="form" action="voucher-barberia" method="post">
+        <h1 class="form__title">
+            VOUCHER
+        </h1>
+       
+        {% if error %}
+        <p class="form__error">{{ error }}</p>
+        {% endif %}
+        <div class="form__container">
+        <div class="form__group">
+            <label for="exampleInputBarbero1" class="form__label"></label>
+            <input type="text" class="form__input" id="exampleInputBarbero1" aria-describedby="barberoHelp" placeholder="Barbero" name="txtBarbero1" required>
+          
+        </div>
+        <div class="form__group">
+            <label for="exampleInputCliente1" class="form__label"></label>
+            <input type="text" class="form__input" id="exampleInputCliente1" placeholder="Cliente" name="txtCliente1" required>
+        </div>
+
+        <div class="form__group">
+            <label for="exampleInputDni1" class="form__label"></label>
+            <input type="number" class="form__input" id="exampleInputDni1" aria-describedby="dniHelp" placeholder="DNI" name="txtDni1" required>
+          
+        </div>
+
+        <button type="submit" class="form__button">ENVIAR</button>
+      
+        </div>
+
+        
+    </form>
+</body>
+</html>

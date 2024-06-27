@@ -438,6 +438,51 @@ def login_barbero():
             return render_template('login_barbero.html', error="Invalid username or password.")
     else:
         return render_template('login_barbero.html')
+    
+@app.route('/corte-barberia')
+def corte_barbero():
+    return render_template('corte_barberia.html')
+
+@app.route('/corte-barberia', methods=['POST'])
+def ingresar_nombres():
+    cliente = request.form['txtCliente']
+    barbero = request.form['txtBarbero']
+    print("Cliente:", cliente)
+    print("Barbero:", barbero)
+    try:
+        cur = mysql.connection.cursor()
+        cur.execute("INSERT INTO corte (cliente, barbero) VALUES (%s, %s)", (cliente, barbero))
+        mysql.connection.commit()
+        cur.close()
+        return render_template('corte_barberia.html', mensaje="Datos ingresados correctamente.")
+    except Exception as e:
+        print("Error al insertar en la base de datos:", e)
+        return render_template('corte_barberia.html', mensaje="Error al ingresar los datos: " + str(e))
+    # Aquí puedes agregar la lógica para procesar estos nombres, como guardarlos en una base de datos.
+    
+    
+
+@app.route('/voucher-barberia')
+def voucher_barbero():
+    return render_template('voucher_barberia.html')
+
+@app.route('/voucher-barberia', methods=['POST'])
+def ingresar_datos():
+    cliente = request.form['txtCliente1']
+    barbero = request.form['txtBarbero1']
+    dni = request.form['txtDni1']
+    print("Cliente:", cliente)
+    print("Barbero:", barbero)
+    print("Dni:", dni)
+    try:
+        cur = mysql.connection.cursor()
+        cur.execute("INSERT INTO voucher_barbero (cliente, barbero, dni) VALUES (%s, %s, %s)", (cliente, barbero, dni))
+        mysql.connection.commit()
+        cur.close()
+        return render_template('voucher_barberia.html', mensaje="Datos ingresados correctamente.")
+    except Exception as e:
+        print("Error al insertar en la base de datos:", e)
+        return render_template('voucher_barberia.html', mensaje="Error al ingresar los datos: " + str(e))
   
 if __name__ == '__main__':
     app.secret_key = "alexis"

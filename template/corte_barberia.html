@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi página web</title>
+    <link rel="stylesheet" href="static/estilos.css">
+</head>
+<body>
+    <form class="form" action="corte-barberia" method="post">
+        <h1 class="form__title">
+            CORTE
+        </h1>
+       
+        {% if error %}
+        <p class="form__error">{{ error }}</p>
+        {% endif %}
+        <div class="form__container">
+        <div class="form__group">
+            <label for="exampleInputCliente" class="form__label"></label>
+            <input type="text" class="form__input" id="exampleInputCliente" aria-describedby="clientelHelp" placeholder="cliente" name="txtCliente" required>
+          
+        </div>
+        <div class="form__group">
+            <label for="exampleInputBarbero" class="form__label"></label>
+            <input type="text" class="form__input" id="exampleInputBarbero" placeholder="Barbero" name="txtBarbero" required>
+        </div>
+
+        <button type="submit" class="form__button">ENVIAR</button>
+      
+        </div>
+
+        
+    </form>
+</body>
+</html>
