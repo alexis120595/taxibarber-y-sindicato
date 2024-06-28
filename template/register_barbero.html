@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Template</title>
+   
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="static/register.css">
+</head>
+
+<body>
+
+    <div class="form__group">
+        <a href="/acceso-barbero" class="form__button">Volver al Login</a>
+    </div>
+
+    <form class="form" action="/register-barbero" method="post">
+
+        {% if error %}
+    <div class="alert alert-danger" role="alert">
+      {{ error }}
+    </div>
+    {% endif %}
+    
+        <h1 class="form__title">REGISTER BARBERO</h1>
+           
+        <div class="form__container">
+        <div class="form__group">
+            <label class="form__label" for="exampleInputBarberoName"></label>
+            <input type="text" class="form__input" id="exampleInputBarberoName" placeholder="Enter full name" name="txtBarberoName" required>
+        </div>
+    
+        <div class="form__group">
+            <label class="form__label" for="exampleInputPassword"></label>
+            <input type="password" class="form__input" id="exampleInputPassword" placeholder="Password" name="txtPassword" required>
+        </div>
+    
+        
+
+        <button type="submit" class="form__button">ENVIAR</button>
+        </div>
+    
+        
+    </form>
+   
+</body>
+
+</html>

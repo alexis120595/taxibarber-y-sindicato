@@ -563,6 +563,24 @@ def estadisticas_barbero():
 
     # Send the graph as JSON
     return jsonify(graph_json=graph_json)
+
+@app.route('/register-barbero')
+def register_barbero():
+    return render_template('register_barbero.html') 
+
+@app.route('/register-barbero', methods=['POST'])
+def register_barbero_data():
+    name = request.form['txtBarberoName']
+    password = request.form['txtPassword']
+    try:
+        cur = mysql.connection.cursor()
+        cur.execute("INSERT INTO barbero (name, password) VALUES (%s, %s)", (name, password))
+        mysql.connection.commit()
+        cur.close()
+        return render_template('register_barbero.html', mensaje="Datos ingresados correctamente.")
+    except Exception as e:
+        print("Error al insertar en la base de datos:", e)
+        return render_template('register_barbero.html', mensaje="Error al ingresar los datos: " + str(e))
   
 if __name__ == '__main__':
     app.secret_key = "alexis"
