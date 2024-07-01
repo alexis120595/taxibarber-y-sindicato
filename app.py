@@ -443,47 +443,51 @@ def login_barbero():
 def corte_barbero():
     return render_template('corte_barberia.html')
 
+from datetime import datetime  # Asegúrate de importar datetime en la parte superior de tu archivo
+
 @app.route('/corte-barberia', methods=['POST'])
 def ingresar_nombres():
     cliente = request.form['txtCliente']
     barbero = request.form['txtBarbero']
+    fecha_actual = datetime.now().strftime('%Y-%m-%d')  # Obtiene la fecha actual en formato YYYY-MM-DD
     print("Cliente:", cliente)
     print("Barbero:", barbero)
+    print("Fecha:", fecha_actual)  # Imprime la fecha actual para verificar
     try:
         cur = mysql.connection.cursor()
-        cur.execute("INSERT INTO corte (cliente, barbero) VALUES (%s, %s)", (cliente, barbero))
+        # Asegúrate de ajustar tu consulta SQL para incluir la columna de fecha
+        cur.execute("INSERT INTO corte (cliente, barbero, fecha) VALUES (%s, %s, %s)", (cliente, barbero, fecha_actual))
         mysql.connection.commit()
         cur.close()
         return render_template('corte_barberia.html', mensaje="Datos ingresados correctamente.")
     except Exception as e:
         print("Error al insertar en la base de datos:", e)
         return render_template('corte_barberia.html', mensaje="Error al ingresar los datos: " + str(e))
-    # Aquí puedes agregar la lógica para procesar estos nombres, como guardarlos en una base de datos.
-    
-    
-
-@app.route('/voucher-barberia')
-def voucher_barbero():
-    return render_template('voucher_barberia.html')
+  
 
 @app.route('/voucher-barberia', methods=['POST'])
 def ingresar_datos():
     cliente = request.form['txtCliente1']
     barbero = request.form['txtBarbero1']
     dni = request.form['txtDni1']
+    fecha_actual = datetime.now().strftime('%Y-%m-%d')  # Obtiene la fecha actual en formato YYYY-MM-DD
     print("Cliente:", cliente)
     print("Barbero:", barbero)
     print("Dni:", dni)
+    print("Fecha:", fecha_actual)  # Imprime la fecha actual para verificar
     try:
         cur = mysql.connection.cursor()
-        cur.execute("INSERT INTO voucher_barbero (cliente, barbero, dni) VALUES (%s, %s, %s)", (cliente, barbero, dni))
+        # Asegúrate de ajustar tu consulta SQL para incluir la columna de fecha
+        cur.execute("INSERT INTO voucher_barbero (cliente, barbero, dni, fecha) VALUES (%s, %s, %s, %s)", (cliente, barbero, dni, fecha_actual))
         mysql.connection.commit()
         cur.close()
         return render_template('voucher_barberia.html', mensaje="Datos ingresados correctamente.")
     except Exception as e:
         print("Error al insertar en la base de datos:", e)
-        return render_template('voucher_barberia.html', mensaje="Error al ingresar los datos: " + str(e))
+        return render_template('voucher_barberia.html', mensaje="Error al ingresar los datos.")    
     
+
+
 @app.route('/listado-cortes', methods=['GET'])
 def lista_cortes():
     cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -509,22 +513,22 @@ def corte():
     # Create a cursor
     cur = mysql.connection.cursor()
     
-    # Execute a SQL query to count users by company
+    # Execute a SQL query to count users by company and include the date of the cut
     cur.execute("""
-        SELECT barbero, COUNT(*) as user_count 
+        SELECT barbero, DATE_FORMAT(fecha, '%Y-%m-%d') as fecha, COUNT(*) as user_count 
         FROM corte
-        GROUP BY barbero 
-        ORDER BY user_count DESC
+        GROUP BY barbero, fecha
+        ORDER BY fecha, user_count DESC
     """)
     
     rows = cur.fetchall()
 
     # Prepare the data for the graph
-    barbero = [row['barbero'] for row in rows]
+    labels = [f"{row['barbero']} ({row['fecha']})" for row in rows]
     user_counts = [row['user_count'] for row in rows]
 
     # Create the graph
-    fig = go.Figure(data=[go.Bar(x=barbero, y=user_counts)])
+    fig = go.Figure(data=[go.Bar(x=labels, y=user_counts)])
 
     # Convert the graph to JSON
     graph_json = pio.to_json(fig)

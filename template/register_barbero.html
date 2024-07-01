@@ -6,16 +6,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <link rel="stylesheet" href="static/register.css">
+    <link rel="stylesheet" href="static/register_barbero.css">
 </head>
 
 <body>
 
-    <div class="form__group">
-        <a href="/acceso-barbero" class="form__button">Volver al Login</a>
-    </div>
-
-    <form class="form" action="/register-barbero" method="post">
+    <form class="form" action="/register-barbero" class="form__link" method="post">
 
         {% if error %}
     <div class="alert alert-danger" role="alert">
@@ -24,6 +20,7 @@
     {% endif %}
     
         <h1 class="form__title">REGISTER BARBERO</h1>
+        <a href="/acceso-barbero" class="form__link">Volver al Login</a>
            
         <div class="form__container">
         <div class="form__group">

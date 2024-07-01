@@ -24,6 +24,8 @@ body{
     border-radius: 10px;
     box-shadow: 0 5px 10px -5px rgb(0 0 0 / 30%);
     text-align: center;
+    position: relative;
+    
 }
 
 .form__title{
@@ -37,8 +39,12 @@ body{
 }
 
 .form__link{
+    display: block;
    font-weight: 400;
     color: #000;
+    text-decoration: none;
+    margin-bottom: 20px
+    
 }
 
 
@@ -143,26 +149,4 @@ body{
 
     }
 
-    .register_barbero{
-    background-color: #3866f2;
-    color: #fff;
-    padding: .5em 1em;
-    border: none;
-    border-radius: .5em;
-    font-weight: 300;
-    font-size: 1rem;
-    font-family: 'Times New Roman', Times, serif;
-    margin-top: 50px;
-    width: fit-content;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    }
-
-    .button-container {
-        margin-top: 50px;
-        width: fit-content;
-        display: block;
-        margin-left: 100px;
-        margin-right: auto;
-    }
+    

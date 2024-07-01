@@ -28,8 +28,15 @@ body{
 
 .form__title{
     font-size:2rem;
-    margin-bottom: 40px;
-    
+    margin-bottom: .5em;
+}
+
+.form__text{
+    font-size: 20px;
+}
+.link{
+    color: #3866f2;
+    text-decoration: none;
 }
 
 .form__paragraph{
@@ -41,7 +48,11 @@ body{
     color: #000;
 }
 
-
+.form__container{
+    margin-top: 3em;
+    display: grid;
+    gap: 2.5em;
+}
 
 .form__group{
     position: relative;
@@ -59,7 +70,7 @@ body{
     outline: none;
     font-family: 'Times New Roman', Times, serif;
     border-radius: 15px;
-    margin-bottom: 10px;
+
 }
 
 .form__input::placeholder {
@@ -93,11 +104,12 @@ body{
     font-weight: 300;
     font-size: 1rem;
     font-family: 'Times New Roman', Times, serif;
-    margin-top: 50px;
+    margin-top: 10px;
     width: fit-content;
     display: block;
     margin-left: auto;
     margin-right: auto;
+    text-decoration: none;
 }
 
 .form__line{
@@ -119,50 +131,19 @@ body{
     transform-origin: left bottom;
 }
 
+.form__title a {
+    color: black;
+    text-decoration: none;
+}
+
+.form__link {
+    color: black;
+    text-decoration: none;
+}
+
 @media (min-width: 425px){
     .form__title{
         font-size: 1.8rem;
     }
    
 }
-
-
-    .sesion__button{
-        position: absolute;
-        top: 30px;
-        left: 30px;
-        padding: 1em;
-        background-color: #3866f2;
-        color: #fff;
-        border: none;
-        border-radius: .5em;
-        font-weight: 300;
-        font-size: 1rem;
-        font-family: 'Times New Roman', Times, serif;
-        cursor: pointer;
-
-    }
-
-    .register_barbero{
-    background-color: #3866f2;
-    color: #fff;
-    padding: .5em 1em;
-    border: none;
-    border-radius: .5em;
-    font-weight: 300;
-    font-size: 1rem;
-    font-family: 'Times New Roman', Times, serif;
-    margin-top: 50px;
-    width: fit-content;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    }
-
-    .button-container {
-        margin-top: 50px;
-        width: fit-content;
-        display: block;
-        margin-left: 100px;
-        margin-right: auto;
-    }

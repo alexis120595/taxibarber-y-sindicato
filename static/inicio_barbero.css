@@ -1,0 +1,40 @@
+.title {
+    text-align: center; /* Centra el texto horizontalmente */
+    display: flex;
+    justify-content: center; /* Centra el contenido horizontalmente en el contenedor */
+    align-items: center; /* Centra el contenido verticalmente en el contenedor */
+    height: 100px; /* Ajusta la altura según sea necesario para permitir el centrado vertical */
+}
+
+.button {
+    background-color: #3866f2;
+    color: #fff;
+    padding: .5em 1em;
+    border: none;
+    border-radius: .5em;
+    font-weight: 300;
+    font-size: 1rem;
+    font-family: 'Times New Roman', Times, serif;
+    margin-top: 40px;/* Añade relleno al botón */
+}
+
+.button1 {
+    background-color: #3866f2;
+    color: #fff;
+    padding: .5em 1em;
+    border: none;
+    border-radius: .5em;
+    font-weight: 300;
+    font-size: 1rem;
+    font-family: 'Times New Roman', Times, serif;
+    margin-top: 40px;/* Añade relleno al botón */
+    margin-left: 590px;
+}
+
+.container {
+    display: flex;
+    justify-content: center; /* Centra los botones horizontalmente */
+    flex-wrap: wrap; /* Permite que los botones se envuelvan en múltiples líneas si no hay espacio suficiente */
+    gap: 10px; /* Espacio entre los botones, ajusta según sea necesario */
+}
+

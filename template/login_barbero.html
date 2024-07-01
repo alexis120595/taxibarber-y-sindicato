@@ -6,20 +6,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <link rel="stylesheet" type="text/css" href="/static/loginadmin.css">
+    <link rel="stylesheet" type="text/css" href="/static/login_barbero.css">
    
 </head>
 
 <body>
-
-    <div class="form__group">
-        <a href="/register-barbero" class="form__button">REGISTRARSE</a>
-    </div>
     
    <div class="form">
     
     <form class="form-control" action="acceso-barbero" method="post">
         <h2 class="form__title"> BARBERO</h2>
+        <p class="form__text">Si no tienes una cuenta,  <a class="link" href="register-barbero" class="form__link">entra aqui</a></p>
+        
         <div class="form__group">
             <label for="exampleInputBarberoName" class="form__label"></label>
             <input type="text" class="form-control form__input" id="exampleInputBarberoName" aria-describedby="barberoNameHelp" placeholder="Enter user name" name="txtBarberoName" required>
