@@ -5,6 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mi página web</title>
     <link rel="stylesheet" href="static/corte_barberia.css">
+    <script>
+        function validarFormulario() {
+            var cliente = document.getElementById('exampleInputCliente').value;
+            var barbero = document.getElementById('exampleInputBarbero').value;
+            var regex = /^[A-Za-z\s]+$/;
+
+            if (!regex.test(cliente) || !regex.test(barbero)) {
+                alert('Por favor, ingrese solo letras en los campos.');
+                return false; // Evita que el formulario se envíe
+            }
+            return true; // Permite que el formulario se envíe
+        }
+    </script>
 </head>
 <body>
 
@@ -12,14 +25,15 @@
         <a href="/inicio-barbero" class="form__button">VOLVER</a>
     </div>
     <form class="form" action="corte-barberia" method="post">
+        {% if mensaje %}
+        <div class="alert alert-danger" role="alert">
+            {{ mensaje }}
+        </div>
+        {% endif %}
         <h1 class="form__title">
             CORTE
         </h1>
         
-       
-        {% if error %}
-        <p class="form__error">{{ error }}</p>
-        {% endif %}
         <div class="form__container">
         <div class="form__group">
             <label for="exampleInputCliente" class="form__label"></label>
@@ -34,8 +48,7 @@
         <button type="submit" class="form__button">ENVIAR</button>
       
         </div>
-
-        
+   
     </form>
 </body>
 </html>

@@ -15,6 +15,11 @@
    <div class="form">
     
     <form class="form-control" action="acceso-barbero" method="post">
+        {% if mensaje %}
+        <div class="alert alert-danger" role="alert">
+            {{ mensaje }}
+        </div>
+        {% endif %}
         <h2 class="form__title"> BARBERO</h2>
         <p class="form__text">Si no tienes una cuenta,  <a class="link" href="register-barbero" class="form__link">entra aqui</a></p>
         

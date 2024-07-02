@@ -435,7 +435,7 @@ def login_barbero():
             session['id'] = account['id']
             return redirect(url_for('inicio_barbero'))
         else:
-            return render_template('login_barbero.html', error="Invalid username or password.")
+            return render_template('login_barbero.html', mensaje="Invalid username or password.")
     else:
         return render_template('login_barbero.html')
     
@@ -452,7 +452,13 @@ def ingresar_nombres():
     fecha_actual = datetime.now().strftime('%Y-%m-%d')  # Obtiene la fecha actual en formato YYYY-MM-DD
     print("Cliente:", cliente)
     print("Barbero:", barbero)
-    print("Fecha:", fecha_actual)  # Imprime la fecha actual para verificar
+    print("Fecha:", fecha_actual)
+    
+    patron = re.compile('^[A-Za-z\s]+$')
+
+    if not patron.match(cliente) or not patron.match(barbero):
+        # Si la validación falla, retorna al formulario con un mensaje de error
+        return render_template('corte_barberia.html', mensaje="Error: Los campos solo deben contener letras y espacios.")  # Imprime la fecha actual para verificar
     try:
         cur = mysql.connection.cursor()
         # Asegúrate de ajustar tu consulta SQL para incluir la columna de fecha
@@ -576,6 +582,10 @@ def register_barbero():
 def register_barbero_data():
     name = request.form['txtBarberoName']
     password = request.form['txtPassword']
+
+    #if not re.match("^[A-Za-z]+$", name):
+        # Si el nombre no es válido, retorna a la plantilla con un mensaje de error
+        #return render_template('register_barbero.html', mensaje="El nombre solo debe contener letras.")
     try:
         cur = mysql.connection.cursor()
         cur.execute("INSERT INTO barbero (name, password) VALUES (%s, %s)", (name, password))

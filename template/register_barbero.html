@@ -1,46 +1,41 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Template</title>
-   
+    <title>Registro Barbero</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="stylesheet" href="static/register_barbero.css">
+    <script>
+        // Validación del lado del cliente para el nombre
+        function validateName() {
+            var name = document.getElementById('exampleInputBarberoName').value;
+            if (!/^[A-Za-z\s]+$/.test(name)) {
+                alert('El nombre solo debe contener letras.');
+                return false;
+            }
+            return true;
+        }
+    </script>
 </head>
-
 <body>
-
-    <form class="form" action="/register-barbero" class="form__link" method="post">
-
-        {% if error %}
-    <div class="alert alert-danger" role="alert">
-      {{ error }}
-    </div>
-    {% endif %}
-    
+    <form class="form" action="/register-barbero" method="post" onsubmit="return validateName()">
+        {% if mensaje %}
+        <div class="alert alert-danger" role="alert">
+            {{ mensaje }}
+        </div>
+        {% endif %}
         <h1 class="form__title">REGISTER BARBERO</h1>
         <a href="/acceso-barbero" class="form__link">Volver al Login</a>
-           
         <div class="form__container">
-        <div class="form__group">
-            <label class="form__label" for="exampleInputBarberoName"></label>
-            <input type="text" class="form__input" id="exampleInputBarberoName" placeholder="Enter full name" name="txtBarberoName" required>
+            <div class="form__group">
+                <input type="text" class="form__input" id="exampleInputBarberoName" placeholder="Enter full name" name="txtBarberoName" aria-label="Full name" required>
+            </div>
+            <div class="form__group">
+                <input type="password" class="form__input" id="exampleInputPassword" placeholder="Password" name="txtPassword" aria-label="Password" required>
+            </div>
+            <button type="submit" class="form__button">ENVIAR</button>
         </div>
-    
-        <div class="form__group">
-            <label class="form__label" for="exampleInputPassword"></label>
-            <input type="password" class="form__input" id="exampleInputPassword" placeholder="Password" name="txtPassword" required>
-        </div>
-    
-        
-
-        <button type="submit" class="form__button">ENVIAR</button>
-        </div>
-    
-        
     </form>
-   
 </body>
-
 </html>

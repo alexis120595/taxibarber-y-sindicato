@@ -149,4 +149,10 @@ body{
 
     }
 
-    
+    .alert  {
+        color: rgb(55, 0, 255); /* Cambia el color según el tipo de mensaje */
+        border: 1px solid rgb(0, 255, 76);
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 5px;
+    }
