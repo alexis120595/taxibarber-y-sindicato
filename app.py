@@ -56,14 +56,14 @@ def login():
             account = cur.fetchone()
 
             if account is None:
-                return render_template('index.html', error="User not registered or invalid password.")
+                return render_template('index.html', mensaje="User not registered or invalid password.")
 
             # Verificar si el estado del usuario es 'inactive'
             if account['estado'] == 'inactive':
-                return render_template('index.html', error="This account is inactive.")
+                return render_template('index.html', mensaje="This account is inactive.")
             
         except Exception as e:
-            return render_template('index.html', error="Database error: " + str(e))
+            return render_template('index.html', mensaje="Database error: " + str(e))
         
         if account:
             session['loggedin'] = True
@@ -153,9 +153,10 @@ def boucher():
 
         # Generar el código QR
         if estado == 'active':   
-            url_base = 'https://87f7-45-189-217-93.ngrok-free.app'
-            ruta = '/buscador-dni'  
-            data = f"{url_base}{ruta}"  # Datos para el código QR
+           # url_base = 'https://87f7-45-189-217-93.ngrok-free.app'
+            #ruta = '/buscador-dni'  
+            #data = f"{url_base}{ruta}"  # Datos para el código QR
+                data = f"{name1}_{dni}"
         else:
             data = 'qr inactivo, genere uno nuevo'
         qr = qrcode.QRCode(
@@ -274,7 +275,7 @@ def administrador():
             session['id'] = account['id']
             return redirect(url_for('users_admin'))
         else:
-            return render_template('index_admin.html', error="Invalid username or password.")
+            return render_template('index_admin.html', mensaje="Invalid username or password.")
     else:
         return render_template('index_admin.html')
     
@@ -413,14 +414,42 @@ def companies():
     # Send the graph as JSON
     return jsonify(graph_json=graph_json)
 
+#esta ruta nos renderiza la plantilla para el registro de los barberos
+@app.route('/register-barbero')
+def register_barbero():
+    return render_template('register_barbero.html') 
+
+#esta ruta nos permite registrar a los barberos en la base de datos
+@app.route('/register-barbero', methods=['POST'])
+def register_barbero_data():
+    name = request.form['txtBarberoName']
+    password = request.form['txtPassword']
+
+    #if not re.match("^[A-Za-z]+$", name):
+        # Si el nombre no es válido, retorna a la plantilla con un mensaje de error
+        #return render_template('register_barbero.html', mensaje="El nombre solo debe contener letras.")
+    try:
+        cur = mysql.connection.cursor()
+        cur.execute("INSERT INTO barbero (name, password) VALUES (%s, %s)", (name, password))
+        mysql.connection.commit()
+        cur.close()
+        return render_template('register_barbero.html', mensaje="Datos ingresados correctamente.")
+    except Exception as e:
+        print("Error al insertar en la base de datos:", e)
+        return render_template('register_barbero.html', mensaje="Error al ingresar los datos: " + str(e))
+    
+
+#esta ruta nos renderiza la plantilla para  el inicio de sesion de los barberos
 @app.route('/acceso-barbero')
 def barbero():
     return render_template('login_barbero.html')
 
+#esta ruta nos renderiza la plantilla del inicio del menu principal de los barberos
 @app.route('/inicio-barbero')
 def inicio_barbero():
     return render_template('inicio_barbero.html')
 
+#esta ruta nos permite acceder con el nombre y la contraseña a la pagina principal de los barberos
 @app.route('/acceso-barbero', methods=['GET', 'POST'])
 def login_barbero():
     if request.method == 'POST':
@@ -438,13 +467,13 @@ def login_barbero():
             return render_template('login_barbero.html', mensaje="Invalid username or password.")
     else:
         return render_template('login_barbero.html')
-    
+
+#esta ruta nos renderiza la plantilla para el registro de los cortes de los barberos    
 @app.route('/corte-barberia')
 def corte_barbero():
     return render_template('corte_barberia.html')
 
-from datetime import datetime  # Asegúrate de importar datetime en la parte superior de tu archivo
-
+#esta ruta nos permite registrar los cortes de los barberos en la base de datos
 @app.route('/corte-barberia', methods=['POST'])
 def ingresar_nombres():
     cliente = request.form['txtCliente']
@@ -471,6 +500,12 @@ def ingresar_nombres():
         return render_template('corte_barberia.html', mensaje="Error al ingresar los datos: " + str(e))
   
 
+#esta ruta nos renderiza la plantilla para el registro de los voucher de los barberos
+@app.route('/voucher-barberia')
+def voucher_barberia():
+    return render_template('voucher_barberia.html')
+
+#esta ruta nos permite registrar los voucher de los barberos en la base de datos
 @app.route('/voucher-barberia', methods=['POST'])
 def ingresar_datos():
     cliente = request.form['txtCliente1']
@@ -480,7 +515,14 @@ def ingresar_datos():
     print("Cliente:", cliente)
     print("Barbero:", barbero)
     print("Dni:", dni)
-    print("Fecha:", fecha_actual)  # Imprime la fecha actual para verificar
+    print("Fecha:", fecha_actual) 
+    if not re.match('^[A-Za-z\s]+$', cliente):
+        return render_template('voucher_barberia.html', mensaje="Error: El nombre del cliente solo puede contener letras.")
+    if not re.match('^[A-Za-z\s]+$', barbero):
+        return render_template('voucher_barberia.html', mensaje="Error: El nombre del barbero solo puede contener letras.")
+    if not re.match('^\d+$', dni):
+        return render_template('voucher_barberia.html', mensaje="Error: El DNI solo puede contener números.")
+ # Imprime la fecha actual para verificar
     try:
         cur = mysql.connection.cursor()
         # Asegúrate de ajustar tu consulta SQL para incluir la columna de fecha
@@ -491,9 +533,8 @@ def ingresar_datos():
     except Exception as e:
         print("Error al insertar en la base de datos:", e)
         return render_template('voucher_barberia.html', mensaje="Error al ingresar los datos.")    
-    
 
-
+#esta ruta nos renderiza la plantilla para el listado de los cortes de los barberos    
 @app.route('/listado-cortes', methods=['GET'])
 def lista_cortes():
     cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -502,6 +543,7 @@ def lista_cortes():
     
     return render_template('listado_cortes.html', corte=data)
 
+#esta ruta nos renderiza la plantilla para el listado de los voucher de los barberos
 @app.route('/listado-voucher-barbero', methods=['GET'])
 def lista_voucher_barbero():
     cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -510,10 +552,12 @@ def lista_voucher_barbero():
     
     return render_template('listado_voucher_barbero.html', voucher_barbero=data)
 
+#esta ruta nos renderiza la plantilla para poder ver las estadisticas de los cortes
 @app.route('/estadisticas-cortes')
 def estadisticas_cortes():
     return render_template('estadisticas_cortes.html')    
 
+#esta ruta nos permite obtener los datos para el grafico de los cortes
 @app.route('/corte')
 def corte():
     # Create a cursor
@@ -542,10 +586,12 @@ def corte():
     # Send the graph as JSON
     return jsonify(graph_json=graph_json)
 
+#esta ruta nos renderiza la plantilla para poder ver las estadisticas de los voucher
 @app.route('/estadisticas-voucher-barbero')
 def estadisticas_voucher_barbero():
     return render_template('estadisticas_voucher_barbero.html') 
 
+#esta ruta nos permite obtener los datos para el grafico de los voucher
 @app.route('/estadisticas-barbero')
 def estadisticas_barbero():
     # Create a cursor
@@ -573,29 +619,7 @@ def estadisticas_barbero():
 
     # Send the graph as JSON
     return jsonify(graph_json=graph_json)
-
-@app.route('/register-barbero')
-def register_barbero():
-    return render_template('register_barbero.html') 
-
-@app.route('/register-barbero', methods=['POST'])
-def register_barbero_data():
-    name = request.form['txtBarberoName']
-    password = request.form['txtPassword']
-
-    #if not re.match("^[A-Za-z]+$", name):
-        # Si el nombre no es válido, retorna a la plantilla con un mensaje de error
-        #return render_template('register_barbero.html', mensaje="El nombre solo debe contener letras.")
-    try:
-        cur = mysql.connection.cursor()
-        cur.execute("INSERT INTO barbero (name, password) VALUES (%s, %s)", (name, password))
-        mysql.connection.commit()
-        cur.close()
-        return render_template('register_barbero.html', mensaje="Datos ingresados correctamente.")
-    except Exception as e:
-        print("Error al insertar en la base de datos:", e)
-        return render_template('register_barbero.html', mensaje="Error al ingresar los datos: " + str(e))
-  
+ 
 if __name__ == '__main__':
     app.secret_key = "alexis"
     app.run(debug=True, port=5000, host='0.0.0.0', threaded=True)

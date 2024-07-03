@@ -16,8 +16,10 @@
             VOUCHER
         </h1>
        
-        {% if error %}
-        <p class="form__error">{{ error }}</p>
+        {% if mensaje %}
+        <div class="alert alert-danger" role="alert">
+            {{ mensaje }}
+        </div>
         {% endif %}
         <div class="form__container">
         <div class="form__group">

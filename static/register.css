@@ -166,3 +166,11 @@ body{
         margin-left: 100px;
         margin-right: auto;
     }
+
+    .alert {
+        color: red; /* Cambia el color según el tipo de mensaje */
+        border: 1px solid red;
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 5px;
+    }

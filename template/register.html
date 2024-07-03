@@ -5,13 +5,13 @@
 
 <form class="form" action="/register-user" method="post">
 
-    {% if error %}
-<div class="alert alert-danger" role="alert">
-  {{ error }}
-</div>
-{% endif %}
-
     <h1 class="form__title">REGISTER</h1>
+
+    {% if error %}
+    <div class="alert alert-danger" role="alert">
+      {{ error }}
+    </div>
+    {% endif %}
        
     <div class="form__container">
     <div class="form__group">

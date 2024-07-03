@@ -16,6 +16,11 @@
     
     <form class="form-control" action="acceso-admin" method="post">
        <a href="acceso-barbero" class="form__link" > <h2 class="form__title"> ADMIN</h2></a>
+       {% if mensaje %}
+       <div class="alert alert-danger" role="alert">
+           {{ mensaje }}
+       </div>
+       {% endif %}
         <div class="form__group">
             <label for="exampleInputUserName1" class="form__label"></label>
             <input type="text" class="form-control form__input" id="exampleInputUserName1" aria-describedby="userNameHelp" placeholder="Enter user name" name="txtUserName">

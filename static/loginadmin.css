@@ -119,6 +119,14 @@ body{
     transform-origin: left bottom;
 }
 
+.alert {
+    color: red; /* Cambia el color según el tipo de mensaje */
+    border: 1px solid red;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+}
+
 @media (min-width: 425px){
     .form__title{
         font-size: 1.8rem;
