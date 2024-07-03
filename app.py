@@ -7,15 +7,21 @@ import plotly.io as pio
 from datetime import datetime
 import re
 import unicodedata
+import os
+from dotenv import load_dotenv
 
 
 app = Flask(__name__, template_folder='template')
 
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'alexis'
-app.config['MYSQL_DB'] = 'login'
-app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
+# Cargar variables de entorno desde .env
+load_dotenv()
+
+app.config['MYSQL_HOST'] = os.getenv('MYSQL_HOST')
+app.config['MYSQL_USER'] = os.getenv('MYSQL_USER')
+app.config['MYSQL_PASSWORD'] = os.getenv('MYSQL_PASSWORD')
+app.config['MYSQL_DB'] = os.getenv('MYSQL_DB')
+app.config['MYSQL_CURSORCLASS'] = os.getenv('MYSQL_CURSORCLASS')
+app.secret_key = os.getenv('SECRET_KEY')
 
 mysql = MySQL(app)
 
@@ -182,6 +188,7 @@ def boucher():
 # y la informacion es guardada en la base de datos de forma correta 
 @app.route('/show_qr/<filename>', methods=['GET'])
 def show_qr(filename):
+    
     name1, dni = filename.split('.')[0].split('_')
 
     cur = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -483,7 +490,7 @@ def ingresar_nombres():
     print("Barbero:", barbero)
     print("Fecha:", fecha_actual)
     
-    patron = re.compile('^[A-Za-z\s]+$')
+    patron = re.compile(r'^[A-Za-z\s]+$')
 
     if not patron.match(cliente) or not patron.match(barbero):
         # Si la validación falla, retorna al formulario con un mensaje de error
@@ -516,11 +523,11 @@ def ingresar_datos():
     print("Barbero:", barbero)
     print("Dni:", dni)
     print("Fecha:", fecha_actual) 
-    if not re.match('^[A-Za-z\s]+$', cliente):
+    if not re.match(r'^[A-Za-z\s]+$', cliente):
         return render_template('voucher_barberia.html', mensaje="Error: El nombre del cliente solo puede contener letras.")
-    if not re.match('^[A-Za-z\s]+$', barbero):
+    if not re.match(r'^[A-Za-z\s]+$', barbero):
         return render_template('voucher_barberia.html', mensaje="Error: El nombre del barbero solo puede contener letras.")
-    if not re.match('^\d+$', dni):
+    if not re.match(r'^\d+$', dni):
         return render_template('voucher_barberia.html', mensaje="Error: El DNI solo puede contener números.")
  # Imprime la fecha actual para verificar
     try:
@@ -621,5 +628,5 @@ def estadisticas_barbero():
     return jsonify(graph_json=graph_json)
  
 if __name__ == '__main__':
-    app.secret_key = "alexis"
+   
     app.run(debug=True, port=5000, host='0.0.0.0', threaded=True)
