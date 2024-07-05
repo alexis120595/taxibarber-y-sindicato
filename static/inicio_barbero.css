@@ -38,3 +38,18 @@
     gap: 10px; /* Espacio entre los botones, ajusta según sea necesario */
 }
 
+@media (min-width: 425px){
+    .form__title{
+        font-size: 1.8rem;
+    }
+  
+ 
+}
+
+@media (max-width: 425px){
+    .button1 {
+        margin-left: auto;
+        margin-right: auto;
+        display: block;
+    }
+}

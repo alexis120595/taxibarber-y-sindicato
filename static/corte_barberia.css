@@ -112,6 +112,24 @@ body{
     text-decoration: none;
 }
 
+.form__button1{
+    background-color: #3866f2;
+    color: #fff;
+    padding: .5em 1em;
+    border: none;
+    border-radius: .5em;
+    font-weight: 300;
+    font-size: 1rem;
+    font-family: 'Times New Roman', Times, serif;
+    
+    width: fit-content;
+    display: block;
+    margin-left: 0;
+    position: relative;
+    top: -40px;
+    text-decoration: none;
+}
+
 .form__line{
     height: 1px;
     background-color: #5757577e;

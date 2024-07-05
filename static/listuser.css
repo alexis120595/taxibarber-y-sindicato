@@ -140,3 +140,10 @@ input:checked + .slider:before {
 .slider.round:before {
     border-radius: 50%;
 }
+
+@media (min-width: 425px){
+    .form__title{
+        font-size: 1.8rem;
+    }
+   
+}

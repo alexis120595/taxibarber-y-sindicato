@@ -48,3 +48,9 @@
         
         }
        
+        @media (min-width: 425px){
+            .form__title{
+                font-size: 1.8rem;
+            }
+           
+        }
