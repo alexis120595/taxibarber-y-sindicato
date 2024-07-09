@@ -175,6 +175,12 @@ body{
         border-radius: 5px;
     }
 
+    .valor{
+        text-align: center; /* Centra el texto horizontalmente */
+        font-weight: bold; 
+        margin-top: 50px; 
+    }
+
     @media (min-width: 425px){
         .form__title{
             font-size: 1.8rem;
