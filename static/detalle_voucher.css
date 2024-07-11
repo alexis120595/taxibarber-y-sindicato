@@ -89,6 +89,19 @@ input:checked + .slider:before {
     font-size: 40px; 
 }
 
+.button {
+    background-color: #3866f2;
+    color: #fff;
+    padding: .5em 1em;
+    border: none;
+    border-radius: .5em;
+    font-weight: 300;
+    font-size: 1rem;
+    font-family: 'Times New Roman', Times, serif;
+    margin-top: 40px;/* Añade relleno al botón */
+}
+
+
 @media (min-width: 425px){
     .form__title{
         font-size: 1.8rem;

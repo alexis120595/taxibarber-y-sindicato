@@ -200,9 +200,9 @@ def show_qr(filename):
 
     # Generar el código QR
     if estado == 'active':
-        url_base = 'https://87f7-45-189-217-93.ngrok-free.app'
-        ruta = '/buscador-dni'
-        data = f"{url_base}{ruta}"   # Datos para el código QR
+       # url_base = 'https://87f7-45-189-217-93.ngrok-free.app'
+       # ruta = '/buscador-dni'
+        data = f"{dni}"   # Datos para el código QR
     else:
         data = 'qr inactivo, genere uno nuevo'
 
