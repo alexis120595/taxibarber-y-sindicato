@@ -9,9 +9,13 @@ import re
 import unicodedata
 import os
 from dotenv import load_dotenv
-
+#from flask_sqlalchemy import SQLAlchemy
+from db.db import db
+from models.tabla_prueba import TablaPrueba
 
 app = Flask(__name__, template_folder='template')
+
+
 
 # Cargar variables de entorno desde .env
 load_dotenv()
@@ -24,6 +28,17 @@ app.config['MYSQL_CURSORCLASS'] = os.getenv('MYSQL_CURSORCLASS')
 app.secret_key = os.getenv('SECRET_KEY')
 
 mysql = MySQL(app)
+
+# Configuración de SQLAlchemy
+app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql://{os.getenv('MYSQL_USER')}:{os.getenv('MYSQL_PASSWORD')}@{os.getenv('MYSQL_HOST')}/{os.getenv('MYSQL_DB')}"
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# Inicializar SQLAlchemy
+db.init_app(app)
+
+with app.app_context():
+        db.create_all()
+
 
 #esta es la ruta de la pagina principal
 @app.route('/')
@@ -626,6 +641,8 @@ def estadisticas_barbero():
 
     # Send the graph as JSON
     return jsonify(graph_json=graph_json)
+
+
  
 if __name__ == '__main__':
    
