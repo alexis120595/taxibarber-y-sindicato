@@ -11,7 +11,12 @@ import os
 from dotenv import load_dotenv
 #from flask_sqlalchemy import SQLAlchemy
 from db.db import db
-from models.tabla_prueba import TablaPrueba
+from models.voucher_barbero import voucher_barbero
+from models.barbero import barbero
+from models.boucher import boucher
+from models.corte import corte
+from models.users_admin import users_admin
+from models.users import users
 
 app = Flask(__name__, template_folder='template')
 
@@ -25,12 +30,14 @@ app.config['MYSQL_USER'] = os.getenv('MYSQL_USER')
 app.config['MYSQL_PASSWORD'] = os.getenv('MYSQL_PASSWORD')
 app.config['MYSQL_DB'] = os.getenv('MYSQL_DB')
 app.config['MYSQL_CURSORCLASS'] = os.getenv('MYSQL_CURSORCLASS')
+app.config['MYSQL_DATABASE_CHARSET'] = 'utf8mb4'
 app.secret_key = os.getenv('SECRET_KEY')
+
 
 mysql = MySQL(app)
 
 # Configuración de SQLAlchemy
-app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql://{os.getenv('MYSQL_USER')}:{os.getenv('MYSQL_PASSWORD')}@{os.getenv('MYSQL_HOST')}/{os.getenv('MYSQL_DB')}"
+app.config['SQLALCHEMY_DATABASE_URI'] = f"mysql://{os.getenv('MYSQL_USER')}:{os.getenv('MYSQL_PASSWORD')}@{os.getenv('MYSQL_HOST')}/{os.getenv('MYSQL_DB')}?charset=utf8mb4"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Inicializar SQLAlchemy
@@ -447,9 +454,9 @@ def register_barbero_data():
     name = request.form['txtBarberoName']
     password = request.form['txtPassword']
 
-    #if not re.match("^[A-Za-z]+$", name):
+    if not re.match(r"^[\w\sñÑáéíóúÁÉÍÓÚ]+$", name, re.UNICODE):
         # Si el nombre no es válido, retorna a la plantilla con un mensaje de error
-        #return render_template('register_barbero.html', mensaje="El nombre solo debe contener letras.")
+        return render_template('register_barbero.html', mensaje="El nombre solo debe contener letras.")
     try:
         cur = mysql.connection.cursor()
         cur.execute("INSERT INTO barbero (name, password) VALUES (%s, %s)", (name, password))
